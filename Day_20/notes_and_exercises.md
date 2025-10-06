@@ -217,9 +217,9 @@ flowchart TD
    mkdir -p /tmp/filldisk
    # Fill ~XGB (adjust according to free space)
    df -h /
-   fallocate -l 13G /tmp/filldisk/dummy1
-   fallocate -l 13G /tmp/filldisk/dummy2
-   fallocate -l 13G /tmp/filldisk/dummy3
+   fallocate -l 10G /tmp/filldisk/dummy1 # Change the numbers accordingly
+   fallocate -l 10G /tmp/filldisk/dummy2
+   fallocate -l 10G /tmp/filldisk/dummy3
    ```
    ```bash
    #!/bin/bash
