@@ -1,4 +1,4 @@
-# Day 06: Advanced Linux Commands (grep, awk, sed, find, xargs, etc.)
+# Day 06: Advanced Linux Commands
 
 ## Learning Objectives
 By the end of Day 6, you will:
@@ -12,7 +12,7 @@ By the end of Day 6, you will:
 
 ## Sample Dataset: sample.log
 
-We'll use the following log file, sample.log, for all command examples and exercises:
+We'll use the following log file, `sample.log`, for all command examples and exercises:
 
 ```
 2025-10-07 10:10:10 INFO  user1 192.168.0.1 Login successful
@@ -55,6 +55,8 @@ flowchart LR
 ---
 
 ### grep (Global Regular Expression Print)
+**grep** is used to search for patterns within text files. It can filter lines that match (or don’t match) a specified string or regular expression. Perfect for quickly locating information in logs or data files.
+
 ```bash
 # Search for ERROR log entries
 grep 'ERROR' sample.log
@@ -72,6 +74,8 @@ grep -n 'WARN' sample.log
 ---
 
 ### awk
+**awk** is a powerful text-processing tool for extracting and manipulating columns or fields in files. It can filter, calculate, and reformat data, making it ideal for analyzing logs and reports.
+
 ```bash
 # Print the username and IP address columns
 awk '{print $4, $5}' sample.log
@@ -86,6 +90,8 @@ awk '{count[$3]++} END {for (level in count) print level, count[level]}' sample.
 ---
 
 ### sed (Stream Editor)
+**sed** is used for editing text in a stream or file. It’s commonly used for find-and-replace jobs, deleting or inserting lines, and performing quick edits to large files—all from the command line.
+
 ```bash
 # Replace "user1" with "admin"
 sed 's/user1/admin/g' sample.log
@@ -100,6 +106,8 @@ sed -n '2,5p' sample.log
 ---
 
 ### find & xargs
+**find** is used to search for files and directories based on name, type, size, modification time, etc. **xargs** takes output from one command (like find or grep) and builds/executed another command with it—perfect for batch processing files found by find.
+
 Assume you have several log files in your current directory (sample.log, app.log, system.log):
 
 ```bash
@@ -116,6 +124,13 @@ grep -l 'Disk space low' *.log | xargs rm
 ---
 
 ### cut, sort, uniq, tr
+- **cut** extracts columns or character ranges from each line of a file.
+- **sort** arranges lines in order (alphabetical/numerical).
+- **uniq** removes adjacent duplicate lines, often used after sort.
+- **tr** translates or deletes characters.
+
+These are essential for extracting and cleaning up data.
+
 ```bash
 # Extract only IP addresses (column 5)
 cut -d' ' -f5 sample.log
@@ -132,6 +147,41 @@ awk '{print $3, $4}' sample.log | tr 'a-z' 'A-Z'
 
 ---
 
+## Extract IP Addresses
+
+Extracting IP addresses from log files is a common task, whether working with web server logs or application logs. This can be done with awk (field extraction) or grep (regex matching).
+
+### Example 1: Web server logs (access.log)
+
+```bash
+# Sample log entries (web server format)
+echo "172.16.0.2 - - [01/Oct/2025:19:10:00 +0530] \"GET /about HTTP/1.1\" 200 2048" >> access.log
+echo "203.0.113.25 - - [01/Oct/2025:19:15:00 +0530] \"POST /submit HTTP/1.1\" 404 256" >> access.log
+
+# Method 1: Using grep with regex pattern to extract IP addresses
+grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' access.log
+
+# Method 2: Using awk to extract the first field (IP address)
+awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/ {print $1}' access.log
+```
+
+### Example 2: Course sample logs (sample.log)
+
+We'll use the provided sample.log (see top of these notes) for all course command demos.
+
+```bash
+# Extract IP addresses (column 5) using awk
+awk '{print $5}' sample.log
+
+# Extract IP addresses with grep regex (matches any IP-like pattern)
+grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' sample.log
+
+# Extract only unique IP addresses
+awk '{print $5}' sample.log | sort | uniq
+```
+
+---
+
 ## Sample Exercises
 
 1. Search for all ERROR log entries.
@@ -139,8 +189,9 @@ awk '{print $3, $4}' sample.log | tr 'a-z' 'A-Z'
 3. Replace every "user1" with "admin" in the log file.
 4. Count how many times each log level appears.
 5. Extract all unique IP addresses.
-6. Print lines 3 through 6 of the sample.log file.
-7. Delete all INFO entries from the log file (output to a new file).
+6. Extract all IP addresses from sample.log and from access.log (if available).
+7. Print lines 3 through 6 of the sample.log file.
+8. Delete all INFO entries from the log file (output to a new file).
 
 ---
 
@@ -171,12 +222,24 @@ awk '{print $3, $4}' sample.log | tr 'a-z' 'A-Z'
    awk '{print $5}' sample.log | sort | uniq
    ```
 
-6. **Print lines 3 through 6:**
+6. **Extract IP addresses:**
+   - From sample.log:
+     ```bash
+     awk '{print $5}' sample.log
+     grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' sample.log
+     ```
+   - From access.log (web server log):
+     ```bash
+     grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' access.log
+     awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/ {print $1}' access.log
+     ```
+
+7. **Print lines 3 through 6:**
    ```bash
    sed -n '3,6p' sample.log
    ```
 
-7. **Delete all INFO entries (output to new file):**
+8. **Delete all INFO entries (output to new file):**
    ```bash
    sed '/INFO/d' sample.log > no_info_sample.log
    ```
