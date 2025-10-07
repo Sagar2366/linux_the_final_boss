@@ -31,26 +31,16 @@ We'll use the following log file, `sample.log`, for all command examples and exe
   - These commands are essential for text processing, automation, and efficient system administration in high-volume environments like logs and configs.
   - Mastery of these tools is expected in DevOps, SRE, and system engineering interviews, where you'll debug issues or automate workflows on the fly.
 
-```mermaid
-flowchart LR
-    A[Raw Data] --> B[grep<br/>Filter Lines]
-    B --> C[awk<br/>Extract Fields]
-    C --> D[sed<br/>Transform Text]
-    D --> E[sort<br/>Order Data]
-    E --> F[uniq<br/>Remove Duplicates]
-    F --> G[Processed Output]
-    
-    H[Text Processing Tools] --> H1[grep - Pattern Matching]
-    H --> H2[awk - Field Processing]
-    H --> H3[sed - Stream Editing]
-    H --> H4[cut - Column Extraction]
-    H --> H5[tr - Character Translation]
-    H --> H6[find - File Search]
-    H --> H7[xargs - Command Building]
-    
-    style A fill:#f96
-    style G fill:#9f6
-```
+## Top 6 Log Parsing Commands
+
+| Command | Description | Examples |
+|---------|-------------|----------|
+| **GREP**<br>`$ grep <pattern> file.log` | Searches any given input files, selecting lines that match one or more patterns | 1. Find file names that match: `grep -l "bytebytego" *.log`<br>2. Case insensitive word match: `grep -i "bytebytego" test.log`<br>3. Show line numbers: `grep -n "bytebytego" test.log`<br>4. Invert matches: `grep -v "bytebytego" test.log`<br>5. Take patterns from a file: `grep -f pattern.txt test.log`<br>6. Search recursively in a dir: `grep -R "bytebytego" /home` |
+| **CUT**<br>`$ cut -d' ' -f3 file.log` | Cuts out selected portions of each line from each file and writes them to the standard output | 1. Cut first 3 bytes: `cut -b1-3 file.log`<br>2. Select 2nd column delimited by a space: `cut -d' ' -f2 test.log`<br>3. Specify character position: `cut -c1-8 test.log` |
+| **SED**<br>`$ sed /<regex>/<replace>/g` | Reads the specified files, modifying the input as specified by a list of commands | 1. Substitute a string: `sed s/bytebytego/go/g test.log`<br>2. Replace the 2nd occurrence: `sed s/bytebytego/go/2 test.log`<br>3. Replace case insensitive: `sed /bytebytego/go/I test.log`<br>4. Replace string on line range of 2-4: `sed '2,4s/bytebytego/go/' test.log`<br>5. Delete a line: `sed '4d' test.log` |
+| **AWK**<br>`$ awk '{print $4}' test.log` | Scans each input file for lines that match any of a set of patterns | 1. Print matched lines: `awk /bytebytego/ {print} test.log`<br>2. Split a line into fields: `awk '{print $1 $3}' test.log`<br>3. Print lines 2 to 7: `awk 'NR>=2 && NR=7 {print NR, $0}' test.log`<br>4. Print lines with more than 10 characters: `awk 'length($0)>10' test.log`<br>5. Find a string (field=4) = "byte" print $0: `awk '$4=="byte" print $0' test.log` |
+| **SORT**<br>`$ sort test.log` | Sorts text and binary files lines | 1. Output to a file: `sort -o output.txt input.txt`<br>2. Sort in reverse order: `sort -r test.log`<br>3. Sort numerically: `sort -n test.log`<br>4. Sort based on the 3rd column: `sort -k3n test.log`<br>5. Check if a file is ordered: `sort -c test.log`<br>6. Sort and remove duplicates: `sort -u test.log` |
+| **UNIQ**<br>`$ uniq test.log` | Compares adjacent input lines, writing a copy of each unique input line to the output file | 1. Tell how many times a line repeats: `uniq -c test.log`<br>2. Print repeated lines: `uniq -d test.log`<br>3. Print unique lines: `uniq -u test.log`<br>4. Skip the first two fields: `uniq -f 2 test.log`<br>5. Compare case-insensitive: `uniq -i test.log`
 
 ---
 
@@ -411,6 +401,5 @@ awk '{print $5}' sample.log | tr 'a-z' 'A-Z' | sort | uniq | wc -l
 12. `find . -name '*.log' -size +10M -exec gzip {} +`
 
 ---
-
 ## Next Steps
 Proceed to [Day 7: Users, Groups & Permissions](../Day_07/notes_and_exercises.md) to learn user management and security.
