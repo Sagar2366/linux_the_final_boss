@@ -8,9 +8,25 @@ By the end of Day 6, you will:
 - Process and manipulate text data efficiently
 - Apply these tools in real DevOps scenarios
 
-**Estimated Time:** 4-5 hours
+**Estimated Time:** 1 hour
+
+## Sample Dataset: sample.log
+
+We'll use the following log file, sample.log, for all command examples and exercises:
+
+```
+2025-10-07 10:10:10 INFO  user1 192.168.0.1 Login successful
+2025-10-07 10:12:15 WARN  user2 10.0.0.2 Disk space low
+2025-10-07 10:13:25 ERROR user3 172.16.0.2 Failed password attempt
+2025-10-07 10:15:40 INFO  user1 192.168.0.1 File uploaded
+2025-10-07 10:17:50 ERROR user4 203.0.113.25 Connection lost
+2025-10-07 10:18:30 INFO  user2 10.0.0.2 Logout
+2025-10-07 10:19:50 INFO  user5 172.16.0.3 Login successful
+2025-10-07 10:20:55 WARN  user1 192.168.0.1 High CPU usage
+```
 
 ## Notes
+
 - **Why Learn Advanced Linux Commands?**
   - These commands are essential for text processing, automation, and efficient system administration.
   - Mastery of these tools is expected in DevOps, SRE, and system engineering interviews.
@@ -36,167 +52,136 @@ flowchart LR
     style G fill:#9f6
 ```
 
-- **grep (Global Regular Expression Print):**
-  ```bash
-  # Basic usage
-  grep 'pattern' file.txt              # Search for pattern
-  grep -i 'pattern' file.txt           # Case insensitive
-  grep -r 'pattern' /path/             # Recursive search
-  grep -v 'pattern' file.txt           # Invert match (exclude)
-  grep -n 'pattern' file.txt           # Show line numbers
-  grep -c 'pattern' file.txt           # Count matches
-  
-  # Context and advanced
-  grep -A 3 -B 2 'pattern' file.txt    # 3 lines after, 2 before
-  grep -E 'pattern1|pattern2' file.txt # Extended regex (OR)
-  grep '^start' file.txt               # Lines starting with 'start'
-  grep 'end$' file.txt                 # Lines ending with 'end'
-  ```
+---
 
-- **awk:**
-  ```bash
-  # Column processing
-  awk '{print $1}' file.txt                    # Print first column
-  awk '{print $1, $3}' file.txt               # Print columns 1 and 3
-  awk -F: '{print $1, $3}' /etc/passwd        # Custom delimiter
-  awk '{print NF}' file.txt                   # Number of fields per line
-  
-  # Filtering and calculations
-  awk '$3 > 1000 {print $1}' /etc/passwd      # Users with UID > 1000
-  awk '{sum += $1} END {print sum}' numbers.txt # Sum first column
-  awk 'length($0) > 80' file.txt              # Lines longer than 80 chars
-  awk '/pattern/ {print $2}' file.txt         # Print column 2 of matching lines
-  ```
-
-- **sed (Stream Editor):**
-  ```bash
-  # Text replacement
-  sed 's/old/new/' file.txt               # Replace first occurrence per line
-  sed 's/old/new/g' file.txt              # Replace all occurrences
-  sed 's/old/new/gi' file.txt             # Case insensitive replacement
-  sed -i 's/old/new/g' file.txt           # Edit file in place
-  
-  # Line operations
-  sed -n '5,10p' file.txt                 # Print lines 5-10
-  sed '3d' file.txt                       # Delete line 3
-  sed '/pattern/d' file.txt               # Delete lines matching pattern
-  sed '2i\New line' file.txt              # Insert line before line 2
-  ```
-
-- **find:**
-  ```bash
-  # Basic searches
-  find /path -name '*.log'                    # Find by name pattern
-  find /path -type f -name '*.txt'            # Find files only
-  find /path -type d -name 'cache'            # Find directories only
-  
-  # Size and time
-  find /path -size +100M                      # Files larger than 100MB
-  find /path -size -1k                       # Files smaller than 1KB
-  find /path -mtime -1                        # Modified in last 24 hours
-  find /path -atime +30                       # Accessed more than 30 days ago
-  
-  # Execute actions
-  find /path -name '*.log' -exec rm {} \;     # Delete found files
-  find /path -name '*.txt' -exec grep 'pattern' {} +  # Search in found files
-  ```
-
-- **xargs:**
-  ```bash
-  # Basic usage
-  echo 'dir1 dir2 dir3' | xargs mkdir        # Create multiple directories
-  cat filelist.txt | xargs cp -t backup/    # Copy files to backup
-  find . -name '*.log' | xargs rm             # Delete found files
-  
-  # Advanced options
-  find . -path ./backup -prune -o -name '*.txt' -print | xargs -I {} cp {} backup/  # Use placeholder/Use the prune method to exclude the backup/ folder
-  printf "First log line\nSecond log line\n">> test.log
-  find . -name '*.log' | xargs -n 1 wc -l    # Process one file at a time
-  find . -name '*.tmp' | xargs -r rm         # Only run if input exists
-  ```
-
-- **cut, sort, uniq, tr:**
-  ```bash
-  # cut - extract columns
-  cut -d: -f1 /etc/passwd                     # Extract first field
-  cut -c1-10 file.txt                        # Extract characters 1-10
-  
-  # sort - sort lines
-  sort file.txt                               # Sort alphabetically
-  sort -n numbers.txt                         # Sort numerically
-  sort -r file.txt                            # Reverse sort
-  sort -k2 file.txt                           # Sort by second column
-  
-  # uniq - remove duplicates
-  sort file.txt | uniq                        # Remove adjacent duplicates
-  sort file.txt | uniq -c                     # Count occurrences
-  sort file.txt | uniq -d                     # Show only duplicates
-  
-  # tr - translate characters
-  tr 'a-z' 'A-Z' < file.txt                  # Convert to uppercase
-  tr -d '0-9' < file.txt                      # Delete digits
-  tr -s ' ' < file.txt                        # Squeeze multiple spaces
-  ```
-
-## Sample Exercises
-1. Search for the word "error" in all `.log` files in `/var/log` (case-insensitive).
-2. Print the username and shell from `/etc/passwd` using `awk`.
-3. Replace all occurrences of "foo" with "bar" in a file using `sed`.
-4. Find all files larger than 100MB in your home directory.
-5. Count the number of unique lines in a file.
-6. Extract all IP addresses from a log file.
-7. Find and delete all empty files in a directory tree.
-
-
-## Solutions
-1. **Search for "error" in log files:**
-   ```bash
-   grep -i "error" /var/log/*.log
-   find /var/log -name "*.log" -exec grep -i "error" {} +
-   ```
-
-2. **Extract username and shell from /etc/passwd:**
-   ```bash
-   awk -F: '{print $1, $7}' /etc/passwd
-   cut -d: -f1,7 /etc/passwd
-   ```
-
-3. **Replace "foo" with "bar":**
-   ```bash
-   sed 's/foo/bar/g' file.txt > newfile.txt
-   sed -i 's/foo/bar/g' file.txt              # In-place edit
-   ```
-
-4. **Find large files:**
-   ```bash
-   find ~ -type f -size +100M
-   find ~ -type f -size +100M -exec ls -lh {} +
-   ```
-
-5. **Count unique lines:**
-   ```bash
-   sort file.txt | uniq | wc -l
-   sort file.txt | uniq -c | wc -l
-   ```
-
-6. **Extract IP addresses:**
+### grep (Global Regular Expression Print)
 ```bash
-# Create sample log entries
-echo "172.16.0.2 - - [01/Oct/2025:19:10:00 +0530] \"GET /about HTTP/1.1\" 200 2048" >> access.log
-echo "203.0.113.25 - - [01/Oct/2025:19:15:00 +0530] \"POST /submit HTTP/1.1\" 404 256" >> access.log
+# Search for ERROR log entries
+grep 'ERROR' sample.log
 
-# Method 1: Using grep with regex pattern
-grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' access.log
+# Case insensitive search for "login"
+grep -i 'login' sample.log
 
-# Method 2: Using awk to extract first field (IP address)
-awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/ {print $1}' access.log
+# Get all lines for user1
+grep 'user1' sample.log
+
+# Show line numbers for WARN
+grep -n 'WARN' sample.log
 ```
 
-7. **Find and delete empty files:**
+---
+
+### awk
+```bash
+# Print the username and IP address columns
+awk '{print $4, $5}' sample.log
+
+# Print only ERROR log lines' usernames
+awk '$3 == "ERROR" {print $4}' sample.log
+
+# Count number of lines per log level
+awk '{count[$3]++} END {for (level in count) print level, count[level]}' sample.log
+```
+
+---
+
+### sed (Stream Editor)
+```bash
+# Replace "user1" with "admin"
+sed 's/user1/admin/g' sample.log
+
+# Delete all INFO lines
+sed '/INFO/d' sample.log
+
+# Print lines 2 to 5
+sed -n '2,5p' sample.log
+```
+
+---
+
+### find & xargs
+Assume you have several log files in your current directory (sample.log, app.log, system.log):
+
+```bash
+# Find all .log files in current directory
+find . -name '*.log'
+
+# Search for "ERROR" in all .log files
+find . -name '*.log' -exec grep 'ERROR' {} +
+
+# Remove all .log files containing "Disk space low"
+grep -l 'Disk space low' *.log | xargs rm
+```
+
+---
+
+### cut, sort, uniq, tr
+```bash
+# Extract only IP addresses (column 5)
+cut -d' ' -f5 sample.log
+
+# Show unique usernames
+awk '{print $4}' sample.log | sort | uniq
+
+# Count unique IP addresses
+awk '{print $5}' sample.log | sort | uniq | wc -l
+
+# Convert usernames and log levels to uppercase
+awk '{print $3, $4}' sample.log | tr 'a-z' 'A-Z'
+```
+
+---
+
+## Sample Exercises
+
+1. Search for all ERROR log entries.
+2. Print all unique usernames found in the logs.
+3. Replace every "user1" with "admin" in the log file.
+4. Count how many times each log level appears.
+5. Extract all unique IP addresses.
+6. Print lines 3 through 6 of the sample.log file.
+7. Delete all INFO entries from the log file (output to a new file).
+
+---
+
+## Solutions
+
+1. **Search for ERROR log entries:**
    ```bash
-   find /path -type f -empty -delete
-   find /path -type f -size 0 | xargs rm
+   grep 'ERROR' sample.log
    ```
+
+2. **Print unique usernames:**
+   ```bash
+   awk '{print $4}' sample.log | sort | uniq
+   ```
+
+3. **Replace every "user1" with "admin":**
+   ```bash
+   sed 's/user1/admin/g' sample.log > new_sample.log
+   ```
+
+4. **Count number of lines per log level:**
+   ```bash
+   awk '{count[$3]++} END {for (level in count) print level, count[level]}' sample.log
+   ```
+
+5. **Extract all unique IP addresses:**
+   ```bash
+   awk '{print $5}' sample.log | sort | uniq
+   ```
+
+6. **Print lines 3 through 6:**
+   ```bash
+   sed -n '3,6p' sample.log
+   ```
+
+7. **Delete all INFO entries (output to new file):**
+   ```bash
+   sed '/INFO/d' sample.log > no_info_sample.log
+   ```
+
+---
 
 ## Completion Checklist
 - [ ] Can use grep with various options for text searching
@@ -206,20 +191,22 @@ awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/ {print $1}' access.log
 - [ ] Combine commands with pipes and xargs
 - [ ] Can create complex one-liners for data processing
 
+---
+
 ## Key Command Combinations
+
 ```bash
-# Log analysis
-grep "ERROR" /var/log/app.log | awk '{print $1, $4}' | sort | uniq -c
+# Find all ERROR lines and show unique users
+grep 'ERROR' sample.log | awk '{print $4}' | sort | uniq
 
-# File cleanup
-find /tmp -name "*.tmp" -mtime +7 | xargs rm
+# Count how many times each IP appears
+awk '{print $5}' sample.log | sort | uniq -c
 
-# Data processing
-cat data.csv | cut -d, -f2 | sort -n | tail -10
-
-# System analysis
-ps aux | awk '{print $1}' | sort | uniq -c | sort -nr
+# Remove all .log files older than 7 days
+find . -name "*.log" -mtime +7 | xargs rm
 ```
+
+---
 
 ## Best Practices
 - Test commands on sample data first
@@ -228,54 +215,37 @@ ps aux | awk '{print $1}' | sort | uniq -c | sort -nr
 - Use `-i` flags carefully (they modify files in place)
 - Always backup important files before bulk operations
 
+---
+
 ## Sample Interview Questions
-1. What is the difference between `grep` and `egrep`?
-2. How do you use `awk` to process columns in a text file?
-3. Give an example of using `sed` to replace text in a file.
-4. How do you find all files modified in the last 24 hours?
-5. What is the use of `xargs`? Give a practical example.
-6. How do you combine `find` and `grep` to search for content in files?
-7. What is the difference between `cut` and `awk`?
-8. How do you sort and remove duplicate lines from a file?
-9. How do you use `tr` for string manipulation?
-10. How do you use pipes to chain multiple commands?
+
+1. How do you search for a specific word in a log file?
+2. How do you print specific columns from a text file?
+3. How do you replace text in a file using sed?
+4. How do you count unique entries in a column?
+5. How do you process multiple files matching a pattern?
+6. How do you delete lines containing a certain pattern?
+7. How do you combine commands to get unique IPs from error logs?
+8. How do you use tr for string manipulation?
+9. How do you print a range of lines from a file?
+10. How do you chain commands with pipes?
+
+---
 
 ## Interview Question Answers
-1. **grep vs egrep:** `grep` uses basic regex; `egrep` (or `grep -E`) uses extended regex with more operators like `+`, `?`, `|`
-2. **awk Columns:** `awk '{print $2}' file` prints second column; use `-F:` to set field separator
-3. **sed Replace:** `sed 's/old/new/g' file` replaces all occurrences of 'old' with 'new'
-4. **Recent Files:** `find /path -mtime -1` finds files modified in last 24 hours
-5. **xargs Usage:** Builds command lines from input; `find . -name '*.log' | xargs rm` deletes all .log files
-6. **find + grep:** `find /path -type f -exec grep 'pattern' {} +` searches content in found files
-7. **cut vs awk:** `cut` extracts fixed columns by delimiter; `awk` is programmable with pattern matching and calculations
-8. **Sort + Unique:** `sort file | uniq` removes duplicate adjacent lines; `sort -u file` combines both operations
-9. **tr Usage:** `tr 'a-z' 'A-Z'` converts lowercase to uppercase; `tr -d '0-9'` deletes digits
-10. **Pipes:** `|` passes output of one command as input to next; enables complex data processing chains
+
+1. `grep 'word' sample.log`
+2. `awk '{print $2, $4}' sample.log`
+3. `sed 's/oldtext/newtext/g' sample.log`
+4. `awk '{print $4}' sample.log | sort | uniq -c`
+5. `find . -name '*.log' -exec command {} +`
+6. `sed '/pattern/d' sample.log`
+7. `grep 'ERROR' sample.log | awk '{print $5}' | sort | uniq`
+8. `echo "text" | tr 'a-z' 'A-Z'`
+9. `sed -n '3,6p' sample.log`
+10. `grep 'ERROR' sample.log | awk '{print $4}' | sort | uniq`
+
+---
 
 ## Next Steps
 Proceed to [Day 7: Users, Groups & Permissions](../Day_07/notes_and_exercises.md) to learn user management and security.
-
-## Sample Interview Questions
-1. What is the difference between `grep` and `egrep`?
-2. How do you use `awk` to process columns in a text file?
-3. Give an example of using `sed` to replace text in a file.
-4. How do you find all files modified in the last 24 hours?
-5. What is the use of `xargs`? Give a practical example.
-6. How do you combine `find` and `grep` to search for content in files?
-7. What is the difference between `cut` and `awk`?
-8. How do you sort and remove duplicate lines from a file?
-9. How do you use `tr` for string manipulation?
-10. How do you use pipes to chain multiple commands?
-
-## Interview Question Answers
-1. `grep` uses basic regex by default; `egrep` (or `grep -E`) uses extended regex, allowing more complex patterns.
-2. Use `awk '{print $2}' file.txt` to print the second column; you can specify field separators with `-F`.
-3. `sed 's/old/new/g' file.txt` replaces all occurrences of 'old' with 'new' in a file.
-4. `find . -mtime -1` finds files modified in the last 24 hours.
-5. `xargs` builds and executes command lines from input; e.g., `find . -name '*.log' | xargs rm` deletes all .log files.
-6. `find . -type f -exec grep 'pattern' {} +` searches for content in files found by `find`.
-7. `cut` extracts columns by delimiter; `awk` is more powerful for pattern matching and processing.
-8. `sort file.txt | uniq` sorts and removes duplicate lines from a file.
-9. `tr 'a-z' 'A-Z'` translates lowercase to uppercase; `tr` is used for character-level string manipulation.
-10. Pipes (`|`) chain commands, passing output of one as input to the next for complex processing.
-
