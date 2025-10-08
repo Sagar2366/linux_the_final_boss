@@ -88,7 +88,7 @@ Users are identified by UID (User ID); groups by GID (Group ID). System users (U
       - `reserved`: Unused (future).
     - **Example:** `testuser1:$6$salt$hash...:19500:0:99999:7:::`
     - **DevOps Note:** Audit expired pwds: `sudo awk -F: '$5==0 || $3 < (mktime("now")/86400 - 30)' /etc/shadow` (simplified check).
-  - **/etc/sudoers:** Defines sudo rules (sensitive). Mode 0440, root/group sudo readable. Edit only with `visudo` (syntax check, lock). Format: `who where=(as_whom) tags command`. Lines can include users, groups (%group), hosts, runas (user/group), tags (NOPASSWD), commands (ALL or paths).
+  - **/etc/sudoers:** Controls who can use sudo and what they can run. Edit only with visudo (checks syntax, prevents lockouts). Format: `who where=(as_whom) tags command`. Lines can include users, groups (%group), hosts, runas (user/group), tags (NOPASSWD), commands (ALL or paths).
     - **Key Elements:**
       - `who`: User (%group for groups).
       - `where`: Host (ALL=any).
