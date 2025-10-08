@@ -10,6 +10,8 @@ By the end of Day 7, you will:
 - Apply security best practices for user management, including locking accounts and auditing
 - Explore key configuration files like /etc/passwd, /etc/shadow, and /etc/sudoers for user control
 
+![Free CKA Series (61)](https://github.com/user-attachments/assets/38223c6c-e317-4d99-be67-00573f9fb065)
+
 **Estimated Time:** 1 hour
 
 ## Sample Environment Setup
