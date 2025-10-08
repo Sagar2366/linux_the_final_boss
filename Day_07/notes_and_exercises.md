@@ -42,6 +42,22 @@ This creates users `testuser1` and `testuser2`, group `testgroup`, and sample fi
 - **Why User & Group Management Matters?**
   - Controls access to resources, enforces least privilege, and prevents unauthorized actions in multi-user environments.
   - Critical for DevOps/SRE: Automate provisioning, secure shared systems, and audit compliance.
+
+### Top 8 User & Permission Management Commands
+
+To mirror Day 6's log parsing table, here's a quick-reference table for core commands in user/group/permissions. Each includes a simple description and key examples for hands-on use.
+
+| Command | Simple Description | Examples |
+|---------|--------------------|----------|
+| **USERADD**<br>`$ sudo useradd -m user` | Creates a new user account (non-interactive). | 1. Basic user with home: `sudo useradd -m testuser`<br>2. With shell and groups: `sudo useradd -m -s /bin/bash -G sudo testuser`<br>3. Custom UID: `sudo useradd -u 2000 -m testuser` |
+| **ADDUSER**<br>`$ sudo adduser user` | Creates a new user interactively (prompts for details). | 1. Full interactive: `sudo adduser testuser` (sets pw, home, etc.)<br>2. Skip prompts: `sudo adduser --disabled-password testuser`<br>3. System user: `sudo adduser --system --group myservice` |
+| **PASSWD**<br>`$ sudo passwd user` | Sets or changes a user's password. | 1. Set pw: `sudo passwd testuser`<br>2. Expire pw: `sudo passwd -e testuser`<br>3. Lock/unlock: `sudo passwd -l testuser` (lock) |
+| **USERMOD**<br>`$ sudo usermod -aG group user` | Modifies an existing user's attributes. | 1. Add to group: `sudo usermod -aG docker testuser`<br>2. Change shell: `sudo usermod -s /bin/zsh testuser`<br>3. Lock account: `sudo usermod -L testuser` |
+| **GROUPADD**<br>`$ sudo groupadd group` | Creates a new group. | 1. Basic group: `sudo groupadd testgroup`<br>2. With GID: `sudo groupadd -g 2000 testgroup`<br>3. System group: `sudo groupadd --system syslog` |
+| **CHOWN**<br>`$ sudo chown user:group file` | Changes file ownership (user and/or group). | 1. Change user/group: `sudo chown testuser:testgroup file.txt`<br>2. Recursive: `sudo chown -R testuser: /home/testuser`<br>3. User only: `sudo chown testuser file.txt` |
+| **CHMOD**<br>`$ chmod 755 file` | Changes file permissions (numeric or symbolic). | 1. Numeric: `chmod 644 file.txt` (rw-r--r--)<br>2. Symbolic: `chmod u+x,g-w file.txt`<br>3. Recursive: `chmod -R 755 /dir` |
+| **SETFACL**<br>`$ setfacl -m u:user:rwx file` | Sets Access Control Lists for fine-grained permissions. | 1. Add user ACL: `setfacl -m u:testuser2:r file.txt`<br>2. Default for dir: `setfacl -m d:g:testgroup:rwx /dir`<br>3. Remove: `setfacl -x u:testuser2 file.txt` |
+
 ---
 
 ### User Concepts & Management
@@ -499,3 +515,5 @@ setfacl -R -m g:devops:rwx /shared; find /shared -exec getfacl {} \; | grep mask
 
 ## Next Steps
 Proceed to [Day 8: File Management & Editors](../Day_08/notes_and_exercises.md) to learn advanced file operations and text editors.
+
+---
