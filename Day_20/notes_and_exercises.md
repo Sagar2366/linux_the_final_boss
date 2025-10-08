@@ -193,19 +193,34 @@ flowchart TD
 
 6. **Backup script:**
    ```bash
-   #!/bin/bash
-   backup_dir="/backup"
-   timestamp=$(date +%Y%m%d_%H%M%S)
-   
-   for file in "$@"; do
-       if [[ -f "$file" ]]; then
-           cp "$file" "${backup_dir}/$(basename "$file").${timestamp}"
-           echo "Backed up: $file"
-       fi
-   done
+    #!/bin/bash
+    backup_dir="/backup"
+    mkdir -p "$backup_dir"
+    timestamp=$(date +%Y%m%d_%H%M%S)
+    for file in "$@"; do
+        if [[ -f "$file" ]]; then
+            cp "$file" "${backup_dir}/$(basename "$file").${timestamp}"
+            echo "Backed up: $file → ${backup_dir}/$(basename "$file").${timestamp}"
+        else
+            echo "Skipping: $file (not a regular file)"
+        fi
+    done
    ```
-
+   **Run script:**
+   ```bash
+   ./backup.sh file1.txt file2.conf /etc/hosts
+   ```
 7. **System monitoring:**
+   
+   **Simulate High Load**
+   ```bash
+   mkdir -p /tmp/filldisk
+   # Fill ~XGB (adjust according to free space)
+   df -h /
+   fallocate -l 10G /tmp/filldisk/dummy1 # Change the numbers accordingly
+   fallocate -l 10G /tmp/filldisk/dummy2
+   fallocate -l 10G /tmp/filldisk/dummy3
+   ```
    ```bash
    #!/bin/bash
    threshold=80
@@ -217,7 +232,11 @@ flowchart TD
        fi
    done
    ```
-
+   **Check usage and delete then**
+   ```bash
+   rm -rf /tmp/filldisk
+   df -h /
+   ```
 ## Sample Interview Questions
 1. What is a shebang and why is it important?
 2. How do you make a script executable?
