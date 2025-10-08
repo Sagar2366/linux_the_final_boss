@@ -45,8 +45,6 @@ This creates users `testuser1` and `testuser2`, group `testgroup`, and sample fi
 
 ### Top 8 User & Permission Management Commands
 
-To mirror Day 6's log parsing table, here's a quick-reference table for core commands in user/group/permissions. Each includes a simple description and key examples for hands-on use.
-
 | Command | Simple Description | Examples |
 |---------|--------------------|----------|
 | **USERADD**<br>`$ sudo useradd -m user` | Creates a new user account (non-interactive). | 1. Basic user with home: `sudo useradd -m testuser`<br>2. With shell and groups: `sudo useradd -m -s /bin/bash -G sudo testuser`<br>3. Custom UID: `sudo useradd -u 2000 -m testuser` |
