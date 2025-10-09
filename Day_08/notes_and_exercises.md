@@ -15,18 +15,12 @@ By the end of Day 8, you will:
 - Editors like nano (easy) and vim (powerful) are must-haves for remote servers (no GUI).
 - Terminal shortcuts speed up everything saving seconds per command adds up in long sessions, making you 2-3x faster at repetitive tasks.
 
-### Top 6 File Management & Editing Commands
-
-Quick-reference table for core tools, each has a simple description and examples for fast practice.
+### Top 2 File Editors & Editing Commands
 
 | Command | Simple Description | Examples |
 |---------|--------------------|----------|
 | **NANO**<br>`$ nano file.txt` | Beginner-friendly editor with on-screen shortcuts. | 1. Open/edit: `nano config.conf`<br>2. Search: Ctrl+W "pattern"<br>3. Save/exit: Ctrl+O, Ctrl+X |
 | **VIM**<br>`$ vim file.txt` | Powerful modal editor for pros (vi-compatible). | 1. Open: `vim script.sh`<br>2. Insert mode: `i` (edit), Esc (normal)<br>3. Save/quit: `:wq` |
-| **STAT**<br>`$ stat file` | Shows detailed file info (size, perms, timestamps). | 1. Basic: `stat app.conf`<br>2. Multiple: `stat *.log`<br>3. Formatted: `stat -c '%A %y %n' file` |
-| **DIFF**<br>`$ diff file1 file2` | Compares two files and shows differences. | 1. Basic: `diff config1.conf config2.conf`<br>2. Unified: `diff -u file1 file2`<br>3. Side-by-side: `diff -y file1 file2` |
-| **WC**<br>`$ wc file` | Counts lines, words, characters in a file. | 1. All: `wc sample.log`<br>2. Lines only: `wc -l sample.log`<br>3. Words: `wc -w script.sh` |
-| **TOUCH**<br>`$ touch file` | Updates timestamps or creates empty files. | 1. Create/update: `touch newfile`<br>2. Set time: `touch -t 202501011200 file`<br>3. Copy timestamp: `touch -r ref.txt target.txt` |
 
 ---
 
