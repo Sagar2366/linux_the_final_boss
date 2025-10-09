@@ -10,7 +10,7 @@ By the end of Day 8, you will:
 
 ## Notes
 
-**Why Editors & Termonal Shortcuts Matter?**
+**Why Editors & Terminal Shortcuts Matter?**
 - Files are the backbone of Linux: configs, scripts, logs—everything needs safe handling and editing.
 - Editors like nano (easy) and vim (powerful) are must-haves for remote servers (no GUI).
 - Advanced ops ensure data integrity and quick troubleshooting in DevOps.
