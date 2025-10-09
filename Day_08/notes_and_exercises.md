@@ -1,4 +1,4 @@
-# Day 08: File Management, Editors & Terminal Shortcuts (nano, vi/vim)
+# Day 08: Editors & Terminal Shortcuts (nano, vi/vim)
 
 ## Learning Objectives
 By the end of Day 8, you will:
