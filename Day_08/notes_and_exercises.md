@@ -25,7 +25,7 @@ By the end of Day 8, you will:
 ---
 
 ### nano Editor (Beginner-Friendly)
-Nano is simple—no modes, just type. Great for quick config edits on servers.
+Nano is simple — no modes, just type. Great for quick config edits on servers.
 
 ```bash
 nano filename                    # Open (creates if missing)
@@ -46,7 +46,7 @@ Alt+A                           # Mark text (for copy/cut blocks)
 ---
 
 ### vi/vim Editor (Advanced)
-Vim is modal (switch modes) and keyboard-only—fast once learned. Essential for remote work.
+Vim is modal (switch modes) and keyboard-only — fast once learned. Essential for remote work.
 
 ```bash
 vi filename                      # Basic vi
@@ -119,14 +119,8 @@ Speed up your workflow with bash keyboard magic, no mouse needed!
 
 1. Create a file using nano, add content, and save it.
 2. Open a file in vim, navigate to a specific line, and make edits.
-3. Compare two similar files and identify differences.
-4. Use vim to search and replace text in a configuration file.
-5. Set file attributes to make a file immutable.
-6. Count lines, words, and characters in a text file.
-7. Create a backup of a file with timestamp.
-8. Use vim to edit multiple files simultaneously.
-9. Archive a directory with tar/gzip and extract it.
-10. View detailed metadata for a file and copy its timestamp to another.
+3. Use vim to search and replace text in a configuration file.
+4. Use Terminal Shortcuts
 
 ---
 
@@ -149,14 +143,7 @@ Speed up your workflow with bash keyboard magic, no mouse needed!
    :wq                             # Save and quit
    ```
 
-3. **Compare files:**
-   ```bash
-   diff file1.txt file2.txt
-   diff -u file1.txt file2.txt     # Unified format
-   vimdiff file1.txt file2.txt     # Visual in vim
-   ```
-
-4. **Search and replace in vim:**
+3. **Search and replace in vim:**
    ```bash
    vim config.conf
    /old_value                      # Search
@@ -165,52 +152,7 @@ Speed up your workflow with bash keyboard magic, no mouse needed!
    :wq                             # Save and quit
    ```
 
-5. **Make file immutable:**
-   ```bash
-   sudo chattr +i important.conf
-   lsattr important.conf           # Verify (shows ----i---------)
-   sudo rm important.conf          # Fails (immutable)
-   sudo chattr -i important.conf   # Unset
-   ```
-
-6. **Count file content:**
-   ```bash
-   wc sample.log                   # Lines words chars
-   wc -l sample.log                # Lines only
-   wc -w sample.log                # Words
-   ```
-
-7. **Backup with timestamp:**
-   ```bash
-   cp file.txt file.txt.$(date +%Y%m%d_%H%M%S).bak
-   ls -l file.txt.*                # Verify
-   ```
-
-8. **Edit multiple files in vim:**
-   ```bash
-   vim file1.txt file2.txt
-   :next                           # Switch to file2
-   # Edit
-   :prev                           # Back to file1
-   :wa :qa                         # Save all, quit all
-   ```
-
-9. **Archive and extract:**
-   ```bash
-   tar -czf backup.tar.gz test_files/
-   ls -lh backup.tar.gz            # Check size
-   tar -xzf backup.tar.gz          # Extract
-   tar -tzf backup.tar.gz          # List without extracting
-   ```
-
-10. **Metadata and timestamp copy:**
-    ```bash
-    stat app.conf                   # View details
-    touch -r app.conf app_modified.conf  # Copy timestamp
-    stat app_modified.conf          # Verify times match
-    ```
-
-11: Use Terminal Shortcuts
+4: Use Terminal Shortcuts
 ```bash
    ping google.com                 # Start ping
    Ctrl+C                          # Interrupt (stops it)
