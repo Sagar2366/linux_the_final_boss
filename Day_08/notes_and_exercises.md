@@ -11,10 +11,9 @@ By the end of Day 8, you will:
 ## Notes
 
 **Why Editors & Terminal Shortcuts Matter?**
-- Files are the backbone of Linux: configs, scripts, logs—everything needs safe handling and editing.
+- Files are the backbone of Linux: configs, scripts, logs - everything needs safe handling and editing.
 - Editors like nano (easy) and vim (powerful) are must-haves for remote servers (no GUI).
-- Advanced ops ensure data integrity and quick troubleshooting in DevOps.
-- Terminal shortcuts speed up everything—saving seconds per command adds up in long sessions, making you 2-3x faster at repetitive tasks.
+- Terminal shortcuts speed up everything saving seconds per command adds up in long sessions, making you 2-3x faster at repetitive tasks.
 
 ### Top 6 File Management & Editing Commands
 
