@@ -30,6 +30,27 @@ sudo ufw allow from 192.168.56.0/24 to any port 2049  # NFS
 sudo ufw allow from 192.168.56.0/24 to any port 21    # FTP
 sudo ufw enable
 ```
+**On Local Machine:**
+```bash
+# Create test data
+mkdir -p ~/test_transfer/{docs,backups,shared}
+echo "Local document v1" > ~/test_transfer/docs/report.txt
+echo "Config data" > ~/test_transfer/config.ini
+echo "Shared file" > ~/test_transfer/shared/demo.txt
+
+# View initial state
+ls -la ~/test_transfer/
+```
+
+**On server1 and server2 (via initial SSH login with password, or console):**
+```bash
+# Create matching test dirs (run on both servers)
+mkdir -p ~/test_transfer/{docs,backups,shared}
+
+# Mirror a sample file for testing
+echo "Server document v1" > ~/test_transfer/docs/server_report.txt
+```
+
 
 **VM Networking:** In VirtualBox, set both VMs to "Bridge Adapter". Get IPs on each VM: `ip addr show`. Test connectivity from local: `ping server1-ip` and `ping server2-ip`.
 
