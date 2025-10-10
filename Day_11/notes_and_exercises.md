@@ -58,11 +58,17 @@ flowchart LR
   - `2>&1`: Redirect stderr to stdout
   - Example: `ls > files.txt 2> errors.txt`
 
+- **Stream In Linux:**
+  - `0`: stdin (input, usually keyboard)
+  - `1`: stdout (normal output, usually screen)
+  - `2`: stderr (error output, usually screen)
+
 - **Wildcards (Globbing):**
   - `*`: Any number of characters
   - `?`: Single character
   - `[abc]`: Any one character in set
   - `[a-z]`: Any character in range
+  - `![abc]`: Any character other than this
   - Example: `ls *.txt`, `rm file?.log`, `ls [a-c]*`
 
 - **Links:**
