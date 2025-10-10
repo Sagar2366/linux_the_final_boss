@@ -180,6 +180,10 @@ flowchart TD
    PasswordAuthentication no
    Port 2222
    
+   # Reload ssh
+   sudo systemctl restart ssh
+   ss -tulpn | grep ssh
+
    # Install fail2ban
    apt install fail2ban
    systemctl enable fail2ban
