@@ -61,51 +61,16 @@ echo "Server document v1" > ~/test_transfer/docs/server_report.txt
   - Essential for system administration, automation, backups, and collaboration.
   - Secure and efficient file transfer is a core DevOps/SRE skill.
 
-- **SSH (Secure Shell):**
-  - Secure remote login and command execution.
-  - `ssh user@host` — Connect to remote host
-  - `ssh -i key.pem user@host` — Use private key
-  - `ssh -p 2222 user@host` — Custom port
-  - `ssh -L local_port:remote_host:remote_port user@host` — Port forwarding
-  - `ssh-copy-id user@host` — Copy public key for passwordless login
+### Top File Transfer Commands
 
-- **SCP (Secure Copy):**
-  - Copy files securely between hosts.
-  - `scp file.txt user@host:/path/` — Upload file
-  - `scp user@host:/path/file.txt .` — Download file
-  - `scp -r dir/ user@host:/path/` — Recursive copy
-  - `scp -P 2222 ...` — Custom port
-
-- **SFTP (SSH File Transfer Protocol):**
-  - Interactive file transfer over SSH.
-  - `sftp user@host` — Start SFTP session
-  - Commands: `put`, `get`, `ls`, `cd`, `mget`, `mput`, `exit`
-
-- **rsync:**
-  - Fast, incremental file transfer and synchronization.
-  - `rsync -avz source/ user@host:/dest/` — Archive, verbose, compress
-  - `rsync -e ssh ...` — Use SSH for transfer
-  - `rsync --delete ...` — Delete files not in source
-  - `rsync -n ...` — Dry run
-
-- **NFS (Network File System):**
-  - Share directories over network (Linux/Unix)
-  - `/etc/exports` — NFS server config
-  - `mount -t nfs server:/share /mnt` — Mount NFS share
-  - `showmount -e server` — List exports
-
-- **FTP (File Transfer Protocol):**
-  - Legacy, insecure protocol for file transfer (no encryption by default).
-  - `ftp server-ip` — Connect interactively
-  - Commands: `put`, `get`, `ls`, `cd`, `binary` (for non-text), `quit`
-  - Avoid in production; use FTPS (FTP over SSL) if needed: `sudo apt install lftp; lftp ftps://server-ip`
-
-- **Best Practices:**
-  - Use SSH keys, disable password login for security
-  - Use `rsync` for large or repeated transfers
-  - Limit NFS access to trusted networks
-  - Monitor and audit remote access logs
-  - Use strong passwords and encryption
+| Command | Simple Description | Examples |
+|---------|--------------------|----------|
+| **SSH**<br>`$ ssh user@host` | Secure remote login/commands over encrypted channel. Foundation for other transfers. | 1. Connect: `ssh ubuntu@server1-ip`<br>2. Run cmd: `ssh ubuntu@server1-ip 'ls ~/test_transfer'`<br>3. Key/port: `ssh -i ~/.ssh/day9_key -p 2222 ubuntu@server1-ip` |
+| **SCP**<br>`$ scp file user@host:/path` | Secure, non-interactive file/dir copy over SSH. | 1. Upload: `scp ~/test_transfer/report.txt ubuntu@server2-ip:~/test_transfer/docs/`<br>2. Download: `scp ubuntu@server2-ip:~/test_transfer/server_report.txt .`<br>3. Dir: `scp -r ~/test_transfer/backups/ ubuntu@server2-ip:~/test_transfer/` |
+| **SFTP**<br>`$ sftp user@host` | Interactive file transfer over SSH (browse dirs, multi-ops). | 1. Session: `sftp ubuntu@server2-ip`<br>2. Upload: `put ~/test_transfer/config.ini`<br>3. Download: `get server_report.txt`; Multi: `mput *.txt` |
+| **RSYNC**<br>`$ rsync -avz source/ dest/` | Efficient sync—transfers only changes over SSH, preserves metadata. | 1. Sync: `rsync -avz --progress ~/test_transfer/ ubuntu@server2-ip:~/backup/`<br>2. Dry run: `rsync -n -avz ~/test_transfer/ ubuntu@server2-ip:~/backup/`<br>3. Delete: `rsync -avz --delete ~/test_transfer/ ubuntu@server2-ip:~/backup/` |
+| **MOUNT** (NFS)<br>`$ sudo mount -t nfs host:/share /mnt` | Mount remote NFS share as local filesystem for seamless access. (Server setup on server1 first.) | 1. Mount: `sudo mount -t nfs server1-ip:/shared/demo /mnt/nfs`<br>2. Test: `ls /mnt/nfs`<br>3. Unmount: `sudo umount /mnt/nfs` |
+| **FTP**<br>`$ ftp host` | Legacy interactive file transfer (insecure; avoid in prod). (Server setup on server1 first.) | 1. Connect: `ftp server1-ip` (login ubuntu/pw)<br>2. Upload: `put ~/test_transfer/report.txt`<br>3. Download: `get demo.txt`; Batch: `echo -e "user ubuntu\n[pw]\nput config.ini\nquit" | ftp server1-ip`
 
 ---
 
