@@ -8,7 +8,7 @@ By the end of Day 10, you will:
 - Configure shell startup files
 - Create useful shell functions
 
-**Estimated Time:** 2-3 hours
+**Estimated Time:** 30 mins
 
 ## Notes
 - **Why Customize Your Shell?**
@@ -42,44 +42,16 @@ By the end of Day 10, you will:
   - Add functions: e.g., `mkcd() { mkdir -p "$1" && cd "$1"; }`
   - Source file to apply changes: `source ~/.bashrc`
 
-```mermaid
-flowchart TD
-    A[Shell Customization] --> B[Environment Variables]
-    A --> C[Aliases]
-    A --> D[Functions]
-    A --> E[Prompt Customization]
-    
-    B --> B1[export PATH=$PATH:/new/path]
-    B --> B2[export EDITOR=vim]
-    
-    C --> C1[alias ll='ls -la']
-    C --> C2[alias gs='git status']
-    
-    D --> D1[mkcd function]
-    D --> D2[backup function]
-    
-    E --> E1[PS1 customization]
-    E --> E2[Color prompts]
-    
-    F[Configuration Files] --> F1[~/.bashrc]
-    F --> F2[~/.bash_profile]
-    F --> F3[~/.zshrc]
-    
-    B1 --> G[source ~/.bashrc]
-    C1 --> G
-    D1 --> G
-    E1 --> G
-    
-    style A fill:#f96
-    style G fill:#9f6
-```
+### Top Shell Customization Commands
 
-- **Best Practices:**
-  - Keep customizations under version control (e.g., dotfiles repo)
-  - Comment your aliases and functions
-  - Avoid overriding critical commands (e.g., `rm`)
-  - Test changes in a new shell before making permanent
-
+| Command | Simple Description | Examples |
+|---------|--------------------|----------|
+| **EXPORT**<br>`$ export VAR=value` | Set an environment variable (session or permanent). | 1. Set: `export MYAPP=/opt/myapp`<br>2. View: `echo $MYAPP`<br>3. PATH add: `export PATH="$PATH:~/shell_custom_test/scripts"` |
+| **PRINTENV**<br>`$ printenv [VAR]` | List all or specific environment variables. | 1. All: `printenv`<br>2. One: `printenv PATH`<br>3. Env all: `env` (alternative) |
+| **UNSET**<br>`$ unset VAR` | Remove an environment variable from session. | 1. Remove: `unset MYAPP`<br>2. Verify: `echo $MYAPP` (empty)<br>3. Multiple: `unset VAR1 VAR2` |
+| **ALIAS**<br>`$ alias name='cmd'` | Create shortcut for a command. | 1. Create: `alias ll='ls -la'`<br>2. List: `alias`<br>3. Remove: `unalias ll` |
+| **PS1**<br>`$ export PS1='format'` | Customize shell prompt (username, dir, etc.). | 1. Basic: `export PS1='\u@\h:\w\$ '`<br>2. Colors: `export PS1='\[\033[32m\]\u@\h\[\033[0m\]:\w\$ '`<br>3. Git: Add function for branch (see solutions) |
+| **SOURCE**<br>`$ source ~/.bashrc` | Reload shell config file to apply changes. | 1. Reload: `source ~/.bashrc`<br>2. Short: `. ~/.bashrc`<br>3. Test: Add alias, source, then use it
 
 
 ## Sample Exercises
@@ -116,68 +88,6 @@ flowchart TD
   - `~/.zshrc`: Zsh configuration
   - `/etc/profile`: System-wide profile
   - `/etc/bash.bashrc`: System-wide bashrc
-
-## Sample Exercises
-1. Add a directory to your PATH and verify it works.
-2. Create an alias for a long command you use often.
-3. Write a shell function to create and enter a directory in one step.
-4. Change your shell prompt to show the current directory and username.
-5. Make an environment variable permanent for all future sessions.
-6. Create a function to quickly backup files with timestamps.
-7. Set up a custom prompt with colors and git branch information.
-
-## Solutions
-1. **Add to PATH:**
-   ```bash
-   export PATH="$PATH:/my/new/dir"
-   echo 'export PATH="$PATH:/my/new/dir"' >> ~/.bashrc
-   source ~/.bashrc
-   ```
-
-2. **Create alias:**
-   ```bash
-   alias ll='ls -alF'
-   alias gs='git status'
-   alias la='ls -la'
-   echo "alias ll='ls -alF'" >> ~/.bashrc
-   ```
-
-3. **Shell function:**
-   ```bash
-   mkcd() { mkdir -p "$1" && cd "$1"; }
-   echo 'mkcd() { mkdir -p "$1" && cd "$1"; }' >> ~/.bashrc
-   ```
-
-4. **Custom prompt:**
-   ```bash
-   export PS1='\u@\h:\w$ '
-   # With colors:
-   export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$ '
-   ```
-
-5. **Permanent environment variable:**
-   ```bash
-   echo 'export MYVAR="myvalue"' >> ~/.bashrc
-   source ~/.bashrc
-   echo $MYVAR
-   ```
-
-6. **Backup function:**
-   ```bash
-   backup() {
-       cp "$1" "$1.backup.$(date +%Y%m%d_%H%M%S)"
-       echo "Backup created: $1.backup.$(date +%Y%m%d_%H%M%S)"
-   }
-   ```
-
-7. **Advanced prompt with git:**
-   ```bash
-   # Add to ~/.bashrc
-   parse_git_branch() {
-       git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-   }
-   export PS1='\u@\h:\w\[\033[32m\]$(parse_git_branch)\[\033[00m\]$ '
-   ```
 
 ## Sample Interview Questions
 1. What is the difference between a shell variable and an environment variable?
