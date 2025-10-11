@@ -16,7 +16,7 @@ By the end of Day 10, you will:
   - Essential for DevOps, SRE, and power users.
 
 - **Environment Variables:**
-  - Environment variablesin Linux are dynamic named values stored in the system's memory that influence how processes, shells, and applications behave. They're essentially key-value pairs (e.g., PATH=/usr/bin:/bin) that provide configuration data, like paths to executables or user-specific settings, without hardcoding them into scripts or programs
+  - Environment variables in Linux are dynamic named values stored in the system's memory that influence how processes, shells, and applications behave. They're essentially key-value pairs (e.g., PATH=/usr/bin:/bin) that provide configuration data, like paths to executables or user-specific settings, without hardcoding them into scripts or programs
   - Store configuration and session info (e.g., PATH, HOME, USER, SHELL).
   - View all: `printenv` or `env`
   - View one: `echo $PATH`
