@@ -4,7 +4,6 @@
 By the end of Day 10, you will:
 - Understand and manage environment variables
 - Create and manage shell aliases
-- Customize shell prompts and behavior
 - Configure shell startup files
 - Create useful shell functions
 
