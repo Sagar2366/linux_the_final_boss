@@ -38,7 +38,6 @@ By the end of Day 10, you will:
 
 - **Shell Customization:**
   - Edit `~/.bashrc`, `~/.bash_profile`, or `~/.zshrc` for custom settings
-  - Customize prompt: `PS1='\u@\h:\w$ '`
   - Add functions: e.g., `mkcd() { mkdir -p "$1" && cd "$1"; }`
   - Source file to apply changes: `source ~/.bashrc`
 
@@ -50,7 +49,6 @@ By the end of Day 10, you will:
 | **PRINTENV**<br>`$ printenv [VAR]` | List all or specific environment variables. | 1. All: `printenv`<br>2. One: `printenv PATH`<br>3. Env all: `env` (alternative) |
 | **UNSET**<br>`$ unset VAR` | Remove an environment variable from session. | 1. Remove: `unset MYAPP`<br>2. Verify: `echo $MYAPP` (empty)<br>3. Multiple: `unset VAR1 VAR2` |
 | **ALIAS**<br>`$ alias name='cmd'` | Create shortcut for a command. | 1. Create: `alias ll='ls -la'`<br>2. List: `alias`<br>3. Remove: `unalias ll` |
-| **PS1**<br>`$ export PS1='format'` | Customize shell prompt (username, dir, etc.). | 1. Basic: `export PS1='\u@\h:\w\$ '`<br>2. Colors: `export PS1='\[\033[32m\]\u@\h\[\033[0m\]:\w\$ '`<br>3. Git: Add function for branch (see solutions) |
 | **SOURCE**<br>`$ source ~/.bashrc` | Reload shell config file to apply changes. | 1. Reload: `source ~/.bashrc`<br>2. Short: `. ~/.bashrc`<br>3. Test: Add alias, source, then use it
 
 ### Environment Variables
@@ -97,19 +95,6 @@ By the end of Day 10, you will:
 **Tips:** Use `$1` for first arg, `$@` for all. Test: `type mkcd` (shows it's a function).
 
 ---
-
-### Shell Prompt Customization
-**Concept:** Modify PS1 for informative/colorful prompts (e.g., show git branch).
-
-**Step-by-Step:**
-1. Basic custom: `export PS1='\u@\h:\w\$ '` (`\u`=user, `\h`=host, `\w`=dir, `\$`=prompt); notice change in prompt.
-2. Add colors: `export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '` (green user, blue dir).
-3. Git branch function: `parse_git_branch() { git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'; }`; `export PS1='\u@\h:\w\[\033[32m\]$(parse_git_branch)\[\033[00m\]\$ '`.
-4. Test in Git repo: `cd ~/shell_custom_test; git init` (prompt shows (master)); `cd ~`.
-5. Make permanent: Add PS1 and parse_git_branch to ~/.bashrc; `source ~/.bashrc`.
-6. (Optional) Reset: `export PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w \$\[\033[00m\] '` (default).
-
-**Tips:** Escape colors: `\[\033[COLORm\]` (resets with \[\033[00m\]). Tools like `starship` for advanced prompts.
 
 ## Sample Exercises
 1. Add a directory to your PATH and verify it works.
@@ -177,32 +162,6 @@ By the end of Day 10, you will:
 - [ ] Can write and use shell functions
 - [ ] Understand shell configuration files
 - [ ] Can make changes permanent
-
-## Key Commands Summary
-```bash
-# Environment variables
-export VAR=value                 # Set environment variable
-echo $VAR                        # Display variable
-unset VAR                        # Remove variable
-printenv                         # List all variables
-
-# Aliases
-alias name='command'             # Create alias
-alias                            # List all aliases
-unalias name                     # Remove alias
-
-# Shell configuration
-source ~/.bashrc                 # Reload configuration
-echo 'config' >> ~/.bashrc      # Add to config file
-```
-
-## Best Practices
-- Keep customizations in version control (dotfiles repo)
-- Comment your aliases and functions
-- Test changes before making permanent
-- Avoid overriding system commands
-- Use meaningful names for variables and functions
-- Backup configuration files before major changes
 
 ## Next Steps
 Proceed to [Day 11: Pipes, Redirects, Wildcards, and Links](../Day_11/notes_and_exercises.md) to master command chaining and I/O redirection.
