@@ -1,4 +1,4 @@
-# Day 10: Environment Variables, Aliases
+# Day 10: Environment Variables, Aliases & Shell Customization
 
 ## Learning Objectives
 By the end of Day 10, you will:
