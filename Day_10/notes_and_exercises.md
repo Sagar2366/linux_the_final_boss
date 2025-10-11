@@ -53,6 +53,63 @@ By the end of Day 10, you will:
 | **PS1**<br>`$ export PS1='format'` | Customize shell prompt (username, dir, etc.). | 1. Basic: `export PS1='\u@\h:\w\$ '`<br>2. Colors: `export PS1='\[\033[32m\]\u@\h\[\033[0m\]:\w\$ '`<br>3. Git: Add function for branch (see solutions) |
 | **SOURCE**<br>`$ source ~/.bashrc` | Reload shell config file to apply changes. | 1. Reload: `source ~/.bashrc`<br>2. Short: `. ~/.bashrc`<br>3. Test: Add alias, source, then use it
 
+### Environment Variables
+**Concept:** Key-value pairs that configure your shell session (e.g., PATH for command search). Local to session unless exported/permanent.
+
+**Step-by-Step:**
+1. View current vars: `printenv | grep PATH` (shows your PATH); `echo $HOME` (shows home dir).
+2. Set temporary var: `export MYTEST="Hello World"` (session-only); `echo $MYTEST` (displays value).
+3. Add to PATH: `export PATH="$PATH:~/shell_custom_test/scripts"`; `test.sh` (runs your sample script—proves PATH works); `echo $PATH` (verify addition).
+4. Remove var: `unset MYTEST`; `echo $MYTEST` (empty now).
+5. Make permanent: `echo 'export MYAPP="permanent value"' >> ~/.bashrc`; `source ~/.bashrc`; `echo $MYAPP` (persists in new terminals).
+6. (Optional) System-wide: `sudo nano /etc/environment` (add `MYGLOBAL=value`), then log out/in.
+
+**Tips:** Use `env | grep VAR` for quick search. Avoid overwriting PATH—always append (`$PATH:...`).
+
+---
+
+### Aliases
+**Concept:** Shortcuts for long/frequent commands (e.g., ll for ls -la). Non-interactive, expand on use.
+
+**Step-by-Step:**
+1. Create temporary alias: `alias ll='ls -la'`; `ll` (lists detailed—shortcut works).
+2. List aliases: `alias` (shows all, including ll).
+3. Create another: `alias gs='git status'` (if Git installed); `gs` (runs git status).
+4. Remove: `unalias ll`; `ll` (now errors—original ls runs).
+5. Make permanent: `echo "alias ll='ls -la'" >> ~/.bashrc`; `echo "alias gs='git status'" >> ~/.bashrc`; `source ~/.bashrc`; open new terminal, `ll` (persists).
+6. (Optional) Advanced: `alias rm='rm -i'` (prompts before delete—safety).
+
+**Tips:** Bypass alias: `command ls` or `\ls`. Comment in ~/.bashrc: `# My ls alias: alias ll='ls -la'`.
+
+---
+
+### Shell Functions
+**Concept:** Mini-scripts in your shell (like aliases but with logic/loops). Defined in config files.
+
+**Step-by-Step:**
+1. Create temporary function: `mkcd() { mkdir -p "$1" && cd "$1"; }`; `mkcd newdir` (creates/enters newdir).
+2. Test: `pwd` (shows /home/user/newdir); `cd ~` (back home).
+3. Another function: `backup() { cp "$1" "$1.backup.$(date +%Y%m%d_%H%M%S)"; echo "Backed up!"; }`; `backup ~/shell_custom_test/scripts/test.sh` (creates timestamped copy).
+4. List functions: `declare -f | grep mkcd` (shows definition).
+5. Make permanent: `echo 'mkcd() { mkdir -p "$1" && cd "$1"; }' >> ~/.bashrc`; `echo 'backup() { cp "$1" "$1.backup.$(date +%Y%m%d_%H%M%S)"; echo "Backed up!"; }' >> ~/.bashrc`; `source ~/.bashrc`.
+6. (Optional) Extract function: Add the `extract()` from notes to ~/.bashrc, source, `extract file.zip` (unzips).
+
+**Tips:** Use `$1` for first arg, `$@` for all. Test: `type mkcd` (shows it's a function).
+
+---
+
+### Shell Prompt Customization
+**Concept:** Modify PS1 for informative/colorful prompts (e.g., show git branch).
+
+**Step-by-Step:**
+1. Basic custom: `export PS1='\u@\h:\w\$ '` (`\u`=user, `\h`=host, `\w`=dir, `\$`=prompt); notice change in prompt.
+2. Add colors: `export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '` (green user, blue dir).
+3. Git branch function: `parse_git_branch() { git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'; }`; `export PS1='\u@\h:\w\[\033[32m\]$(parse_git_branch)\[\033[00m\]\$ '`.
+4. Test in Git repo: `cd ~/shell_custom_test; git init` (prompt shows (master)); `cd ~`.
+5. Make permanent: Add PS1 and parse_git_branch to ~/.bashrc; `source ~/.bashrc`.
+6. (Optional) Reset: `export PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w \$\[\033[00m\] '` (default).
+
+**Tips:** Escape colors: `\[\033[COLORm\]` (resets with \[\033[00m\]). Tools like `starship` for advanced prompts.
 
 ## Sample Exercises
 1. Add a directory to your PATH and verify it works.
