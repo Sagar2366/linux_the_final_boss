@@ -10,6 +10,23 @@ By the end of Day 11, you will:
 
 **Estimated Time:** 30 mins
 
+## Sample Environment Setup
+Exercises are local, no VMs needed. Use your local machine (e.g., Ubuntu/Mac with Bash).
+```
+mkdir -p ~/day11_test/{logs,scripts,docs}
+echo "Line 1: Normal" > ~/day11_test/logs/log1.txt
+echo "Line 2: ERROR here" >> ~/day11_test/logs/log1.txt
+echo "Line 3: Normal" >> ~/day11_test/logs/log1.txt
+echo "Line 4: WARNING" >> ~/day11_test/logs/log1.txt
+touch ~/day11_test/docs/{file1.txt,file2.txt,log1.log,log2.log}
+echo '#!/bin/bash\necho "Test script"' > ~/day11_test/scripts/test.sh
+chmod +x ~/day11_test/scripts/test.sh
+
+# View initial state
+ls -la ~/day11_test/
+cat ~/day11_test/logs/log1.txt
+```
+
 ## Why These Tools Matter:
   - Essential for chaining commands, automating tasks, and flexible file management in Linux.
   - Mastery is expected for DevOps, SRE, and system engineering roles.
