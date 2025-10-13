@@ -14,6 +14,14 @@ By the end of Day 11, you will:
   - Essential for chaining commands, automating tasks, and flexible file management in Linux.
   - Mastery is expected for DevOps, SRE, and system engineering roles.
 
+
+| Command | Simple Description | Examples |
+|---------|--------------------|----------|
+| **PIPE**<br>`$ cmd1 \| cmd2` | Chain commands by passing output as input. | 1. Basic: `ls \| grep txt`<br>2. Chain: `cat log.txt \| grep ERROR \| wc -l`<br>3. Sort: `ps aux \| sort -k1 \| head -5` |
+| **REDIRECT**<br>`$ cmd > file` | Send output/input to/from files (use >> for append, < for input, 2> for stderr). | 1. Overwrite: `ls > files.txt`<br>2. Append: `echo "Log" >> log.txt`<br>3. Both: `cmd > out.txt 2>&1` |
+| **WILDCARD**<br>`$ ls *.txt` | Match files with patterns (glob). | 1. Any: `rm *.tmp`<br>2. Single: `ls file?.log`<br>3. Range: `ls [a-c]*.txt \| wc -l` |
+| **LINK**<br>`$ ln file link` | Create file/directory pointers (hard or sym). | 1. Hard: `ln original hardlink`<br>2. Sym: `ln -s original symlink`<br>3. View: `ls -li \| grep original`
+
 - **Pipes (`|`):**
   - Pass output of one command as input to another.
 
