@@ -51,16 +51,24 @@ cat ~/day11_test/logs/log1.txt
 ---
 
 - **Redirects:**
-  - `>`: Redirect output to file (overwrite)
-  - `>>`: Redirect output to file (append)
-  - `<`: Use file as input
-  - `2>`: Redirect stderr
-  - `2>&1`: Redirect stderr to stdout
- 
-  - **Stream In Linux:**
-  - `0`: stdin (input, usually keyboard)
-  - `1`: stdout (normal output, usually screen)
-  - `2`: stderr (error output, usually screen)
+- Redirections change where a command gets its input (stdin) or sends its output (stdout/stderr), letting you save results to files, read from files, or combine streams without extra tools.
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| `>` | Redirect stdout to file (overwrite) | `ls > files.txt` (overwrites files.txt with ls output) |
+| `>>` | Redirect stdout to file (append) | `echo "Log" >> log.txt` (adds to end of log.txt) |
+| `<` | Use file as stdin (input) | `grep ERROR < log.txt` (greps content from log.txt) |
+| `2>` | Redirect stderr to file | `ls nonexist 2> errors.txt` (errors to errors.txt) |
+| `2>&1` | Redirect stderr to stdout | `ls nonexist > out.txt 2>&1` (both to out.txt) |
+
+### File Descriptors (Streams): 
+- File descriptors are numbers identifying open streams for a process: 0 for input, 1 for normal output, 2 for errors. Redirections target these for precise control.
+
+| Descriptor | Name | Description |
+|------------|------|-------------|
+| `0` | stdin | Input stream (usually keyboard) |
+| `1` | stdout | Normal output stream (usually screen) |
+| `2` | stderr | Error output stream (usually screen)
 
 **Example:**
   - Stdout overwrite: ls ~/day11_test > ~/day11_test/files.txt (ls to file).
@@ -72,7 +80,7 @@ cat ~/day11_test/logs/log1.txt
 ---
 
 
-- **Wildcards (Globbing):**
+- **Wildcards (Globbing):** Wildcards (globbing) expand patterns to match files before command execution: * for any chars, ? for one char, [] for sets.
   - `*`: Any number of characters
   - `?`: Single character
   - `[abc]`: Any one character in set
@@ -89,7 +97,7 @@ cat ~/day11_test/logs/log1.txt
 ---
 
 
-- **Links:**
+- **Links:** Links create multiple names for files: hard links share data (same inode), symbolic links point to paths (like shortcuts).
   - **Hard Link:** `ln file1 file2` — Same inode, file exists until all links are deleted
   - **Symbolic Link (Symlink):** `ln -s target linkname` — Pointer to another file or directory
   - Use `ls -li` to view inodes and link types
