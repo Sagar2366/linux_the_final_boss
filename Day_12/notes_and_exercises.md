@@ -100,7 +100,7 @@ du -sh ~/day12_test/data/
 
 - **Best Practices:**
   - Compress before archiving for efficiency.
-  - Test restores quarterly—don't trust untested backups.
+  - Test restores quarterly, don't trust untested backups.
   - Use rsync for live syncs; tar for snapshots.
   - Encrypt (gpg) sensitive data: `tar -czvf - data/ | gpg -c > backup.gpg`.
   - Log everything: Redirect script output to logs.
