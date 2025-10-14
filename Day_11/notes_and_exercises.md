@@ -119,44 +119,6 @@ cat ~/day11_test/logs/log1.txt
   - Use wildcards carefully to avoid accidental deletion
   - Prefer symlinks for configs/scripts; use hard links for backup/versioning
 
-
-
-## Sample Exercises
-1. Use pipes to count the number of lines containing "error" in a log file.
-2. Redirect both stdout and stderr of a command to a file.
-3. List all files starting with "test" and ending with ".sh" in a directory.
-4. Create a symbolic link and a hard link for a file, then show the difference.
-5. Use wildcards to delete all `.tmp` files in a directory.
-
-- **Advanced Redirection:**
-  ```bash
-  # File descriptors
-  command 1> stdout.txt 2> stderr.txt    # Separate stdout/stderr
-  command &> all_output.txt              # Both to same file (bash)
-  command > output.txt 2>&1              # Both to same file (POSIX)
-  
-  # Here documents
-  cat << EOF > file.txt
-  Line 1
-  Line 2
-  EOF
-  
-  # Process substitution
-  diff <(sort file1) <(sort file2)       # Compare sorted files
-  ```
-
-- **Advanced Wildcards:**
-  ```bash
-  # Extended globbing (bash)
-  shopt -s extglob
-  ls !(*.txt)                            # All except .txt files
-  ls *.@(jpg|png|gif)                    # Multiple extensions
-  
-  # Brace expansion
-  touch file{1..10}.txt                  # Create file1.txt to file10.txt
-  mkdir -p project/{src,docs,tests}      # Create directory structure
-  ```
-
 ## Sample Exercises
 1. Use pipes to count the number of lines containing "error" in a log file.
 2. Redirect both stdout and stderr of a command to a file.
