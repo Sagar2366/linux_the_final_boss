@@ -39,7 +39,7 @@ du -sh ~/day12_test/data/bigfile.dat  # Verify ~1G
 | **COMPRESSION**<br>`$ gzip file.txt` | Reduce file size. | 1. Basic: `gzip file.txt` (creates file.txt.gz)<br>2. Decompress: `gunzip file.txt.gz`<br>3. Keep original: `gzip -k file.txt` |
 | **ARCHIVING**<br>`$ tar -cvf archive.tar dir/` | Bundle files into one. | 1. Create: `tar -czvf archive.tar.gz dir/`<br>2. Extract: `tar -xzvf archive.tar.gz`<br>3. List: `tar -tzf archive.tar.gz` |
 | **BACKUP**<br>`$ rsync -av src/ dest/` | Sync/copy with smarts. | 1. Mirror: `rsync -av --delete ~/data/ ~/backup/`<br>2. Progress: `rsync -av --progress src/ dest/`<br>3. Exclude: `rsync -av --exclude='*.tmp' src/ dest/` |
-| **VERIFY**<br>`$ sha256sum file` | Check integrity. | 1. Generate: `sha256sum archive.tar.gz > checksum.sha256`<br>2. Check: `sha256sum -c checksum.sha256`<br>3. Tar test: `tar -tzf archive.tar.gz` |
+| **VERIFY**<br>`$ sha256sum file` | Check integrity. | 1. Generate: `sha256sum archive.tar.gz > checksum.sha256`<br>2. Check: `sha256sum -c checksum.sha256`|
 
 - **Compression Tools:**
   - Shrink files for storage/transfer. gzip (fast, good for text), bzip2 (better ratio, slower), xz (best ratio, slowest).
