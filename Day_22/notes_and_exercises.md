@@ -1,5 +1,24 @@
 # Day 22: Certificate Management (SSL/TLS, OpenSSL, Certbot)
 
+## Table of Contents
+
+- [Day 22: Certificate Management (SSL/TLS, OpenSSL, Certbot)](#day-22-certificate-management-ssltls-openssl-certbot)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Why Certificate Management Matters](#why-certificate-management-matters)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [Certificate generation](#certificate-generation)
+- [Let's Encrypt](#let's-encrypt)
+- [Certificate inspection](#certificate-inspection)
+  - [Best Practices](#best-practices)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 22, you will:
 - Understand SSL/TLS fundamentals and PKI

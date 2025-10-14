@@ -1,5 +1,24 @@
 # Day 24: System Updates & Patching
 
+## Table of Contents
+
+- [Day 24: System Updates & Patching](#day-24-system-updates-&-patching)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Why Updates & Patching Matter](#why-updates-&-patching-matter)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [Check for updates](#check-for-updates)
+- [Install updates](#install-updates)
+- [Automated updates](#automated-updates)
+  - [Best Practices](#best-practices)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 24, you will:
 - Understand different types of system updates

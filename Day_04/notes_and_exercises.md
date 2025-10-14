@@ -1,5 +1,50 @@
 # Day 04: Linux Boot Process & Service Management
 
+## Table of Contents
+
+- [Day 04: Linux Boot Process & Service Management](#day-04-linux-boot-process-&-service-management)
+  - [Learning Objectives](#learning-objectives)
+  - [Quick Recap: The Linux Boot Process](#quick-recap-the-linux-boot-process)
+    - [Detailed Step-by-Step](#detailed-step-by-step)
+  - [Quick NGINX Service Management Demo (Hands-On)](#quick-nginx-service-management-demo-hands-on)
+    - [0. Prerequisites](#0.-prerequisites)
+    - [1. Install NGINX](#1.-install-nginx)
+- [Debian/Ubuntu](#debianubuntu)
+- [RHEL/CentOS (if EPEL needed on older versions)](#rhelcentos-if-epel-needed-on-older-versions)
+- [or](#or)
+    - [2. Check the Service File & Status](#2.-check-the-service-file-&-status)
+    - [3. Start the Service](#3.-start-the-service)
+    - [4. Enable at Boot](#4.-enable-at-boot)
+    - [5. Verify Listening Port](#5.-verify-listening-port)
+    - [6. Test Default Page](#6.-test-default-page)
+- [Expect: HTTP/1.1 200 OK](#expect-http1.1-200-ok)
+    - [7. Modify a Simple Page](#7.-modify-a-simple-page)
+    - [8. Test Config Before Reload](#8.-test-config-before-reload)
+    - [9. Reload (Zero-Downtime Config Apply)](#9.-reload-zero-downtime-config-apply)
+    - [10. View Logs](#10.-view-logs)
+- [Systemd journal](#systemd-journal)
+- [Access and error logs](#access-and-error-logs)
+    - [11. Restart vs Reload](#11.-restart-vs-reload)
+    - [12. Temporarily Stop & Disable](#12.-temporarily-stop-&-disable)
+    - [13. Re-enable & Start Again](#13.-re-enable-&-start-again)
+    - [14. Show Startup Time Impact (Optional)](#14.-show-startup-time-impact-optional)
+    - [15. Create a Drop-In Override (Customization)](#15.-create-a-drop-in-override-customization)
+    - [16. Uninstall (Optional Cleanup)](#16.-uninstall-optional-cleanup)
+- [Debian/Ubuntu](#debianubuntu)
+- [RHEL/CentOS](#rhelcentos)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [Service management](#service-management)
+- [Logs and diagnostics](#logs-and-diagnostics)
+- [Boot analysis](#boot-analysis)
+  - [Troubleshooting Tips](#troubleshooting-tips)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 4, you will:
 - Understand the complete Linux boot process

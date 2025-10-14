@@ -1,5 +1,30 @@
 # Day 08: Editors & Terminal Shortcuts (nano, vi/vim)
 
+## Table of Contents
+
+- [Day 08: Editors & Terminal Shortcuts (nano, vi/vim)](#day-08-editors-&-terminal-shortcuts-nano-vivim)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+    - [Top 2 File Editors & Editing Commands](#top-2-file-editors-&-editing-commands)
+    - [nano Editor (Beginner-Friendly)](#nano-editor-beginner-friendly)
+- [Shortcuts (bottom of screen)](#shortcuts-bottom-of-screen)
+    - [vi/vim Editor (Advanced)](#vivim-editor-advanced)
+- [Modes](#modes)
+- [Normal: Default—navigate/commands (Esc to enter)](#normal-default—navigatecommands-esc-to-enter)
+- [Insert: Edit text (i to enter)](#insert-edit-text-i-to-enter)
+- [Command: Save/search (: to enter)](#command-savesearch--to-enter)
+- [Quick Start](#quick-start)
+- [Navigation (Normal mode)](#navigation-normal-mode)
+- [Editing (Normal mode)](#editing-normal-mode)
+- [Search/Replace (Command mode)](#searchreplace-command-mode)
+- [Advanced](#advanced)
+    - [Terminal Shortcuts](#terminal-shortcuts)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Completion Checklist](#completion-checklist)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 8, you will:
 - Use nano for simple, beginner-friendly text editing

@@ -1,5 +1,24 @@
 # Day 21: Volume Management (LVM, RAID, Snapshots, Resizing)
 
+## Table of Contents
+
+- [Day 21: Volume Management (LVM, RAID, Snapshots, Resizing)](#day-21-volume-management-lvm-raid-snapshots-resizing)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Why Volume Management Matters](#why-volume-management-matters)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [LVM](#lvm)
+- [RAID](#raid)
+- [Monitoring](#monitoring)
+  - [Best Practices](#best-practices)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 21, you will:
 - Understand LVM concepts and implementation

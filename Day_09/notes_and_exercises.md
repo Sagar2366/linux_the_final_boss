@@ -1,5 +1,31 @@
 # Day 09: File Transfer (SCP, SFTP, rsync, FTP, NFS)
 
+## Table of Contents
+
+- [Day 09: File Transfer (SCP, SFTP, rsync, FTP, NFS)](#day-09-file-transfer-scp-sftp-rsync-ftp-nfs)
+  - [Learning Objectives](#learning-objectives)
+  - [Sample Environment Setup](#sample-environment-setup)
+- [Update and install basics (run on all three machines)](#update-and-install-basics-run-on-all-three-machines)
+- [Enable services (run on all three machines)](#enable-services-run-on-all-three-machines)
+- [Firewall (allow SSH, NFS, FTP from local subnet; adjust 192.168.56.0/24 to your VirtualBox network) (run on all three machines)](#firewall-allow-ssh-nfs-ftp-from-local-subnet;-adjust-192.168.56.024-to-your-virtualbox-network-run-on-all-three-machines)
+- [Create test data](#create-test-data)
+- [View initial state](#view-initial-state)
+- [Create matching test dirs (run on both servers)](#create-matching-test-dirs-run-on-both-servers)
+- [Mirror a sample file for testing](#mirror-a-sample-file-for-testing)
+  - [Notes](#notes)
+    - [Top File Transfer Commands](#top-file-transfer-commands)
+    - [SSH (Secure Shell)](#ssh-secure-shell)
+    - [SCP (Secure Copy)](#scp-secure-copy)
+    - [SFTP (SSH File Transfer Protocol)](#sftp-ssh-file-transfer-protocol)
+    - [rsync (Remote Sync)](#rsync-remote-sync)
+    - [NFS (Network File System)](#nfs-network-file-system)
+    - [FTP (File Transfer Protocol) - Legacy Warning](#ftp-file-transfer-protocol---legacy-warning)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Completion Checklist](#completion-checklist)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 9, you will:
 - Master secure file transfer protocols (SCP, SFTP, rsync)

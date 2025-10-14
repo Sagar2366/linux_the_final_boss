@@ -4,6 +4,20 @@
 
 # Day 00: Introduction & Course Goals
 
+## Table of Contents
+
+- [Day 00: Introduction & Course Goals](#day-00-introduction-&-course-goals)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [How to Ask for Help](#how-to-ask-for-help)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Completion Checklist](#completion-checklist)
+  - [Troubleshooting](#troubleshooting)
+  - [Feedback & Suggestions](#feedback-&-suggestions)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 0, you will:
 - Understand the course structure and goals
