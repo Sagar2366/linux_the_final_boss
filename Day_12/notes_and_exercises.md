@@ -77,7 +77,7 @@ du -sh ~/day12_test/data/
 
 - **Backup Tools:**
   - rsync: Efficient sync, preserves metadata, incremental.
-  - dd: Raw disk imaging (risky—use `lsblk` to ID disks).
+  - dd: Raw disk imaging (risky - use `lsblk` to ID disks).
   - cp: Simple copy (`cp -a` for archive mode).
 
   **Examples:**
