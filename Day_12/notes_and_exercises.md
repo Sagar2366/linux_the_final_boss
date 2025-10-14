@@ -277,4 +277,3 @@ du -sh ~/day12_test/data/bigfile.dat  # Verify ~1G
 
 ## Next Steps
 Proceed to [Day 13: Process Management & Scheduling](../Day_13/notes_and_exercises.md) to learn task automation and process control.
-```
