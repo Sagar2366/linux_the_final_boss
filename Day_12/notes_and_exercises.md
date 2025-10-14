@@ -312,5 +312,3 @@ du -sh ~/day12_test/data/bigfile.dat  # Verify ~1G
 
 ## Next Steps
 Proceed to [Day 13: Process Management & Scheduling](../Day_13/notes_and_exercises.md) to learn task automation and process control.
-This keeps the section balanced (sha256sum + cron demos side-by-side), hits the objective, and stays simple. If it's too much/too little, or you want to tweak the cron line (e.g., add verify inside the script), lemme know! 🚀
-```
