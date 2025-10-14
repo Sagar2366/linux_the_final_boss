@@ -101,7 +101,7 @@ awk -F' ' 'OFS="\t" {print $4, $5}' sample.log
 awk 'BEGIN {print "Log Analysis"} {print $0; total++} END {print "Total lines:", total}' sample.log
 
 # Match pattern: Lines with IP starting with 192
-awk '/^192/ {print $4}' sample.log
+awk '$5 ~ /^192/ {print $0}' sample.log
 ```
 
 ---
