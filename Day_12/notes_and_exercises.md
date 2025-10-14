@@ -76,12 +76,18 @@ du -sh ~/day12_test/data/
 
 - **Backup Tools:**
   - rsync: rsync (remote sync) is a versatile file synchronization tool that copies files and directories efficiently, often over networks, by transferring only differences (delta-transfer algorithm). It's ideal for backups because it minimizes bandwidth/data usage, handles interruptions (resumable), and preserves file attributes like permissions, timestamps, ownership, and symlinks.
+  - Copies only what's new/changed. Safe and fast. Key flags: -a (keep details), -v (show what happens).
   - cp: Simple copy (`cp -a` for archive mode).
 
   **Examples:**
   - rsync basic: `rsync -av ~/day12_test/data/ ~/day12_test/backups/mirror/`.
-  - With delete: `rsync -av --delete ~/day12_test/data/ ~/day12_test/backups/mirror/` (removes extras in dest).
   - Strategies: Full (all data), Incremental (changes since last), Differential (changes since full).
+    1. First copy: mkdir ~/day12_test/backups/copy && rsync -av ~/day12_test/data/ ~/day12_test/backups/copy/ (full 1GB transfer).
+    2. Change source: echo "Change" >> ~/day12_test/data/bigfile.dat.
+    3. Sync again: rsync -av ~/day12_test/data/ ~/day12_test/backups/copy/ (only ~15 bytes transfer—fast!).
+    4. Skip junk: rsync -av --exclude='*.tmp' ~/day12_test/data/ ~/day12_test/backups/clean/ (no .tmp files).
+    5. Preview: rsync -av --dry-run ~/day12_test/data/ ~/day12_test/backups/copy/ (shows plan, no action).
+    6. Check: ls ~/day12_test/backups/copy/ (matches source).
 
 ---
 
