@@ -65,7 +65,6 @@ du -sh ~/day12_test/data/
 
 ### Advanced tar:
 - Exclude: `tar -czvf backup.tar.gz --exclude='*.tmp' --exclude='junk.log' ~/day12_test/data/`.
-- Incremental: `tar -czvf full.tar.gz -g snapshot.snar ~/day12_test/data/` (first full). Then `tar -czvf incr.tar.gz -g snapshot.snar ~/day12_test/data/` (changes only).
 - Specific extract: `tar -xzvf archive.tar.gz data/file1.txt` (one file).
 
 **Example:**
@@ -76,14 +75,12 @@ du -sh ~/day12_test/data/
 ---
 
 - **Backup Tools:**
-  - rsync: Efficient sync, preserves metadata, incremental.
-  - dd: Raw disk imaging (risky - use `lsblk` to ID disks).
+  - rsync: rsync (remote sync) is a versatile file synchronization tool that copies files and directories efficiently, often over networks, by transferring only differences (delta-transfer algorithm). It's ideal for backups because it minimizes bandwidth/data usage, handles interruptions (resumable), and preserves file attributes like permissions, timestamps, ownership, and symlinks.
   - cp: Simple copy (`cp -a` for archive mode).
 
   **Examples:**
   - rsync basic: `rsync -av ~/day12_test/data/ ~/day12_test/backups/mirror/`.
   - With delete: `rsync -av --delete ~/day12_test/data/ ~/day12_test/backups/mirror/` (removes extras in dest).
-  - dd caution: `dd if=/dev/sda1 of=~/backups/disk.img bs=4M status=progress` (backs up partition; verify device!).
   - Strategies: Full (all data), Incremental (changes since last), Differential (changes since full).
 
 ---
