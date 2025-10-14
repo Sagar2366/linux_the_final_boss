@@ -39,7 +39,7 @@ du -sh ~/day12_test/data/bigfile.dat  # Verify ~1G
 | **COMPRESSION**<br>`$ gzip file.txt` | Reduce file size. | 1. Basic: `gzip file.txt` (creates file.txt.gz)<br>2. Decompress: `gunzip file.txt.gz`<br>3. Keep original: `gzip -k file.txt` |
 | **ARCHIVING**<br>`$ tar -cvf archive.tar dir/` | Bundle files into one. | 1. Create: `tar -czvf archive.tar.gz dir/`<br>2. Extract: `tar -xzvf archive.tar.gz`<br>3. List: `tar -tzf archive.tar.gz` |
 | **BACKUP**<br>`$ rsync -av src/ dest/` | Sync/copy with smarts. | 1. Mirror: `rsync -av --delete ~/data/ ~/backup/`<br>2. Progress: `rsync -av --progress src/ dest/`<br>3. Exclude: `rsync -av --exclude='*.tmp' src/ dest/` |
-| **VERIFY**<br>`$ sha256sum file` | Check integrity. | 1. Generate: `sha256sum archive.tar.gz > checksum.sha256`<br>2. Check: `sha256sum -c checksum.sha256`|
+| **VERIFY**<br>`$ sha256sum file` | Check integrity. | 1. Generate: `sha256sum archive.tar.gz > checksum.sha256`<br>2. Check: `sha256sum -c checksum.sha256`<br>3. Tar test: `tar -tzf archive.tar.gz` |
 
 - **Compression Tools:**
   - Shrink files for storage/transfer. gzip (fast, good for text), bzip2 (better ratio, slower), xz (best ratio, slowest).
@@ -143,6 +143,41 @@ du -sh ~/day12_test/data/bigfile.dat  # Verify ~1G
     /home/user/day12_test/backups/data.tar.gz: FAILED
     ```  
   - Fix: Re-make the tar and re-generate the checksum.
+
+  **Cron: Automate Backups (Quick 1-Sentence)**  
+  Cron is Linux's built-in scheduler—like an alarm clock for commands. Set it once, and it runs your backup script automatically (e.g., nightly).
+
+  **Real Demo: Step-by-Step (Copy-Paste Ready)**  
+  Your `backup.sh` script (from setup) already does a tar—now schedule it.  
+
+  **Step 1: Edit Cron Jobs**  
+  ```bash
+  crontab -e
+  ```  
+  - What it does: Opens a text editor (nano/vi). Add one line at the end, save/exit (in nano: Ctrl+O, Enter, Ctrl+X).  
+  - Add this line:  
+    ```
+    0 2 * * * ~/day12_test/scripts/backup.sh >> /tmp/backup.log 2>&1
+    ```  
+    (Runs at 2:00 AM daily; logs output to `/tmp/backup.log` for checking.)
+
+  **Step 2: Test It Manually (Don't Wait for 2AM!)**  
+  ```bash
+  ~/day12_test/scripts/backup.sh
+  ```  
+  - What it does: Runs the script now—echoes timestamp, creates `/tmp/backup.tar.gz`.  
+  - Real output:  
+    ```
+    Backup starting at Tue Oct 14 14:30:00 UTC 2025
+    ```  
+    (Check: `ls /tmp/backup.tar.gz` and `cat /tmp/backup.log`.)
+
+  **Step 3: List & Remove (If Testing)**  
+  ```bash
+  crontab -l  # Shows your jobs
+  crontab -r  # Removes all (for cleanup)
+  ```  
+  - What it does: `-l` lists; `-r` erases (safe for tests). For every 5 mins (test): Use `*/5 * * * *` instead of `0 2 * * *`.
 
   **Tar integrity:** `tar -tzf ~/day12_test/backups/data.tar.gz > /dev/null && echo "OK" || echo "Corrupt"`.
 
@@ -277,3 +312,5 @@ du -sh ~/day12_test/data/bigfile.dat  # Verify ~1G
 
 ## Next Steps
 Proceed to [Day 13: Process Management & Scheduling](../Day_13/notes_and_exercises.md) to learn task automation and process control.
+This keeps the section balanced (sha256sum + cron demos side-by-side), hits the objective, and stays simple. If it's too much/too little, or you want to tweak the cron line (e.g., add verify inside the script), lemme know! 🚀
+```
