@@ -228,4 +228,3 @@ du -sh ~/day12_test/data/
 
 ## Next Steps
 Proceed to [Day 13: Process Management & Scheduling](../Day_13/notes_and_exercises.md) to learn task automation and process control.
-```
