@@ -29,6 +29,328 @@ By the end of Day 15, you will:
 
 ## Part 1: Basic Networking Concepts
 
+### Essential Networking Terms
+
+Before diving into commands, let's understand the basic vocabulary:
+
+| Term | Definition | Analogy | Example |
+|------|------------|---------|---------|
+| **Network** | Group of connected computers that can communicate | Like a neighborhood | Your home network, office network |
+| **Internet** | Global network of networks | Like the worldwide postal system | The "cloud", websites, servers |
+| **Protocol** | Set of rules for communication | Like a language (English, Spanish) | HTTP, TCP, DNS |
+| **IP Address** | Unique identifier for a device on network | Like a home address | 192.168.1.10 |
+| **Port** | Virtual door for specific services | Like apartment numbers in a building | Port 80 (web), Port 22 (SSH) |
+| **Gateway/Router** | Device that connects networks | Like a city's post office | Your home router |
+| **DNS** | Converts names to IP addresses | Like a phonebook | google.com → 142.250.185.46 |
+| **MAC Address** | Hardware address of network card | Like a serial number | 00:1A:2B:3C:4D:5E |
+| **Subnet** | Subdivision of a network | Like streets in a neighborhood | 192.168.1.0/24 |
+| **Firewall** | Security system that filters traffic | Like a security guard | Blocks/allows connections |
+| **Packet** | Unit of data sent over network | Like a letter in mail | Contains data + addressing info |
+| **Ping** | Test if host is reachable | Like saying "hello, are you there?" | `ping google.com` |
+| **Latency** | Time for data to travel | Like mail delivery time | 10ms (fast), 200ms (slow) |
+| **Bandwidth** | Amount of data that can be sent | Like highway lanes | 100 Mbps, 1 Gbps |
+| **Interface** | Network connection point | Like a network port on your computer | eth0, wlan0 |
+| **localhost** | Refers to this computer | Like saying "home" | 127.0.0.1 or localhost |
+
+### Understanding IP Addresses
+
+**What is an IP Address?**
+- Unique identifier for each device on a network
+- Like a mailing address, but for computers
+- Allows devices to find and communicate with each other
+
+**IPv4 Format:**
+```
+192.168.1.10
+ ↓   ↓   ↓  ↓
+ |   |   |  └─ Host number (1-254)
+ |   |   └──── Subnet
+ |   └──────── Network
+ └──────────── Network class
+```
+
+**IP Address Types:**
+
+| Type | Range | Who Uses It | Example |
+|------|-------|-------------|---------|
+| **Private (Home/Office)** | 192.168.0.0 - 192.168.255.255 | Local networks only | 192.168.1.10 |
+| | 10.0.0.0 - 10.255.255.255 | Large organizations | 10.0.1.50 |
+| | 172.16.0.0 - 172.31.255.255 | Medium organizations | 172.16.0.100 |
+| **Public** | Everything else | Internet-facing | 8.8.8.8 (Google DNS) |
+| **Loopback** | 127.0.0.1 | This computer only | 127.0.0.1 (localhost) |
+| **Link-Local** | 169.254.x.x | Auto-assigned when DHCP fails | 169.254.1.1 |
+| **Broadcast** | 255.255.255.255 | Send to all devices | Used for discovery |
+
+**Special IP Addresses You'll See:**
+
+| IP Address | What It Means | When You See It |
+|------------|---------------|-----------------|
+| **0.0.0.0** | All interfaces / Not configured | Server listening on all IPs, or no IP assigned |
+| **127.0.0.1** | Localhost (this computer) | Testing local services |
+| **192.168.1.1** | Typical home router | Your default gateway |
+| **8.8.8.8** | Google's public DNS | DNS server, connectivity testing |
+| **1.1.1.1** | Cloudflare's public DNS | Alternative DNS server |
+| **255.255.255.255** | Broadcast to all | Network discovery |
+
+**IP Address Parts:**
+
+```
+192.168.1.10/24
+         ↓   ↓
+         |   └─ Network mask (/24 = 255.255.255.0)
+         └───── IP address
+
+What /24 means:
+- First 3 numbers are the network (192.168.1)
+- Last number is the host (10)
+- Can have 256 addresses (0-255)
+- Usable: 1-254 (0 is network, 255 is broadcast)
+```
+
+**Common Subnet Masks:**
+
+| CIDR | Subnet Mask | How Many Hosts | Typical Use |
+|------|-------------|----------------|-------------|
+| /32 | 255.255.255.255 | 1 (just this IP) | Single host |
+| /24 | 255.255.255.0 | 254 | Home/small office |
+| /16 | 255.255.0.0 | 65,534 | Large organization |
+| /8 | 255.0.0.0 | 16,777,214 | ISP/Enterprise |
+
+### Understanding Ports
+
+**What is a Port?**
+- Virtual "door" or "channel" for network services
+- Allows multiple services on same IP address
+- Numbers from 0 to 65535
+
+**Port Number Ranges:**
+
+| Range | Type | Who Uses | Example |
+|-------|------|----------|---------|
+| **0-1023** | Well-Known Ports | System services (need root) | 22=SSH, 80=HTTP, 443=HTTPS |
+| **1024-49151** | Registered Ports | Applications | 3306=MySQL, 5432=PostgreSQL |
+| **49152-65535** | Dynamic/Private | Temporary connections | Randomly assigned |
+
+**Common Ports You'll Use:**
+
+| Port | Service | What It's For | Encrypted? |
+|------|---------|---------------|------------|
+| **20/21** | FTP | File transfer | ❌ No |
+| **22** | SSH | Remote login, secure shell | ✅ Yes |
+| **23** | Telnet | Remote login (OLD, insecure) | ❌ No |
+| **25** | SMTP | Sending email | ❌ Usually no |
+| **53** | DNS | Name to IP conversion | ❌ No |
+| **67/68** | DHCP | Automatic IP assignment | ❌ No |
+| **80** | HTTP | Websites (unencrypted) | ❌ No |
+| **110** | POP3 | Retrieving email | ❌ No |
+| **143** | IMAP | Email access | ❌ No |
+| **443** | HTTPS | Websites (encrypted) | ✅ Yes |
+| **465/587** | SMTPS | Secure email sending | ✅ Yes |
+| **993** | IMAPS | Secure email access | ✅ Yes |
+| **3306** | MySQL | Database | ❌ No (can tunnel) |
+| **3389** | RDP | Windows remote desktop | ✅ Yes |
+| **5432** | PostgreSQL | Database | ❌ No (can tunnel) |
+| **6379** | Redis | Cache database | ❌ No |
+| **8080** | HTTP-Alt | Alternative web server | ❌ No |
+| **27017** | MongoDB | NoSQL database | ❌ No |
+
+**How Ports Work:**
+
+```
+Your Computer                Remote Server
+192.168.1.10                 93.184.216.34
+
+Request:
+192.168.1.10:54321 -------> 93.184.216.34:80
+(random port)                (web server)
+
+Response:
+192.168.1.10:54321 <------- 93.184.216.34:80
+```
+
+### Understanding Protocols
+
+**What is a Protocol?**
+- Set of rules for network communication
+- Like languages humans speak to understand each other
+- Different protocols for different purposes
+
+**Protocol Stack (How They Work Together):**
+
+```
+┌─────────────────────────────────┐
+│   Application Layer             │  What: User services
+│   HTTP, FTP, SSH, DNS, SMTP     │  Example: Web browsing
+├─────────────────────────────────┤
+│   Transport Layer               │  What: Port-to-port delivery
+│   TCP, UDP                      │  Example: Reliable vs fast
+├─────────────────────────────────┤
+│   Network Layer                 │  What: IP addressing, routing
+│   IP, ICMP                      │  Example: Packet routing
+├─────────────────────────────────┤
+│   Link Layer                    │  What: Physical connection
+│   Ethernet, Wi-Fi              │  Example: Local network
+└─────────────────────────────────┘
+```
+
+**Major Protocols Explained:**
+
+| Protocol | Full Name | Layer | Purpose | How It Works |
+|----------|-----------|-------|---------|--------------|
+| **IP** | Internet Protocol | Network | Addressing and routing | Delivers packets to correct address |
+| **TCP** | Transmission Control Protocol | Transport | Reliable delivery | Checks all data arrived correctly |
+| **UDP** | User Datagram Protocol | Transport | Fast delivery | Sends without checking delivery |
+| **ICMP** | Internet Control Message Protocol | Network | Error reporting | Used by ping, traceroute |
+| **HTTP** | Hypertext Transfer Protocol | Application | Web pages | How browsers get websites |
+| **HTTPS** | HTTP Secure | Application | Encrypted web | HTTP with SSL/TLS encryption |
+| **DNS** | Domain Name System | Application | Name resolution | Converts names to IP addresses |
+| **SSH** | Secure Shell | Application | Remote access | Encrypted remote login |
+| **FTP** | File Transfer Protocol | Application | File transfer | Upload/download files |
+| **SMTP** | Simple Mail Transfer Protocol | Application | Send email | How email is sent |
+| **DHCP** | Dynamic Host Configuration Protocol | Application | Auto IP config | Assigns IP addresses automatically |
+| **ARP** | Address Resolution Protocol | Link | MAC address discovery | Maps IP to MAC address |
+
+**TCP vs UDP (Detailed Comparison):**
+
+| Feature | TCP | UDP | Analogy |
+|---------|-----|-----|---------|
+| **Connection** | Yes (3-way handshake) | No | Phone call vs postcard |
+| **Reliability** | Guaranteed delivery | Best effort | Certified mail vs regular mail |
+| **Order** | Packets in order | May arrive out of order | Numbered pages vs loose papers |
+| **Speed** | Slower (overhead) | Faster (no overhead) | Careful driving vs racing |
+| **Error Checking** | Yes, with retransmission | Basic checksum only | Proofreading vs quick glance |
+| **Header Size** | 20 bytes (larger) | 8 bytes (smaller) | Big envelope vs small envelope |
+| **Use Cases** | Web, email, file transfer | Streaming, gaming, DNS | When accuracy matters vs speed matters |
+| **Examples** | HTTP, SSH, FTP | DNS, VoIP, video calls | Downloads vs live video |
+
+**When to Use Each:**
+
+```
+Use TCP when:
+✅ Data must arrive completely
+✅ Data must arrive in order
+✅ You can tolerate slight delays
+Examples: Downloading files, web pages, database queries
+
+Use UDP when:
+✅ Speed is critical
+✅ Some data loss is acceptable
+✅ Real-time is important
+Examples: Video calls, online gaming, live streaming, DNS lookups
+```
+
+### Understanding DNS (Domain Name System)
+
+**What is DNS?**
+- Translates human-readable names to IP addresses
+- Like a phone book for the internet
+- You type `google.com`, DNS returns `142.250.185.46`
+
+**How DNS Works (Step by Step):**
+
+```
+1. You type: google.com in browser
+                ↓
+2. Computer checks: /etc/hosts (local file)
+                ↓
+3. If not found, asks: DNS server (configured in /etc/resolv.conf)
+                ↓
+4. DNS server responds: 142.250.185.46
+                ↓
+5. Browser connects to: 142.250.185.46 on port 443
+```
+
+**DNS Record Types:**
+
+| Record | Full Name | Purpose | Example |
+|--------|-----------|---------|---------|
+| **A** | Address | IPv4 address of domain | example.com → 93.184.216.34 |
+| **AAAA** | Address (IPv6) | IPv6 address of domain | example.com → 2606:2800:220:1:248:... |
+| **CNAME** | Canonical Name | Alias pointing to another domain | www.example.com → example.com |
+| **MX** | Mail Exchange | Mail server for domain | example.com → mail.example.com |
+| **NS** | Name Server | Authoritative DNS servers | example.com → ns1.example.com |
+| **TXT** | Text | Arbitrary text (verification, SPF) | SPF records, domain verification |
+| **PTR** | Pointer | Reverse lookup (IP to name) | 93.184.216.34 → example.com |
+| **SOA** | Start of Authority | Zone information | Primary nameserver info |
+
+**Public DNS Servers:**
+
+| Provider | Primary | Secondary | Features |
+|----------|---------|-----------|----------|
+| **Google** | 8.8.8.8 | 8.8.4.4 | Fast, reliable, widely used |
+| **Cloudflare** | 1.1.1.1 | 1.0.0.1 | Privacy-focused, very fast |
+| **Quad9** | 9.9.9.9 | 149.112.112.112 | Security filtering, blocks malware |
+| **OpenDNS** | 208.67.222.222 | 208.67.220.220 | Content filtering options |
+
+### Understanding Network Layers (Simplified)
+
+**The 4-Layer Model (TCP/IP):**
+
+```
+┌────────────────────────────────────────┐
+│  Layer 4: APPLICATION                  │  What you see/use
+│  HTTP, FTP, SSH, DNS, SMTP, etc.       │  Examples: Websites, email, file transfer
+│  Tools: curl, wget, dig, ssh           │
+├────────────────────────────────────────┤
+│  Layer 3: TRANSPORT                    │  Port-to-port delivery
+│  TCP (reliable), UDP (fast)            │  Examples: Port 80, Port 443
+│  Tools: netstat, ss, telnet            │
+├────────────────────────────────────────┤
+│  Layer 2: NETWORK (Internet)           │  IP addressing & routing
+│  IP, ICMP, ARP                         │  Examples: 192.168.1.10, routing tables
+│  Tools: ping, traceroute, ip route     │
+├────────────────────────────────────────┤
+│  Layer 1: LINK (Network Access)        │  Physical connection
+│  Ethernet, Wi-Fi, cables               │  Examples: Network card, cables
+│  Tools: ip link, ethtool               │
+└────────────────────────────────────────┘
+```
+
+**How Data Flows (Simplified):**
+
+```
+SENDING (Your Computer):
+1. Application: "Send this email" (SMTP protocol)
+2. Transport: "Break into packets, use TCP port 25"
+3. Network: "Add my IP (192.168.1.10) and destination IP (8.8.8.8)"
+4. Link: "Add MAC addresses, send over Ethernet"
+
+RECEIVING (Remote Server):
+1. Link: "Received data on network card"
+2. Network: "This is for IP 8.8.8.8, that's me!"
+3. Transport: "Port 25, that's email service"
+4. Application: "Process this email"
+```
+
+### Key Networking Components
+
+**Gateway/Router:**
+- Connects your network to other networks (like the internet)
+- Usually first IP in your subnet (192.168.1.1)
+- All traffic to internet goes through it
+- Think: The exit door of your building
+
+**DNS Server:**
+- Resolves domain names to IP addresses
+- Configured in `/etc/resolv.conf`
+- Can be local or public (8.8.8.8)
+- Think: The phone book lookup service
+
+**Network Interface:**
+- Hardware/software connection point
+- eth0 = first Ethernet
+- wlan0 = wireless
+- lo = loopback (127.0.0.1)
+- Think: The network port on your computer
+
+**MAC Address (Media Access Control):**
+- Physical hardware address (48 bits)
+- Format: 00:1A:2B:3C:4D:5E
+- Unique to each network card
+- Used at link layer (local network only)
+- Think: Serial number of network card
+---
+
 ### TCP/IP Layers
 
 | Layer | What It Does | Example | Tools |
