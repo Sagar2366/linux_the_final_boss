@@ -9,7 +9,7 @@ By the end of Day 15, you will:
 - Follow systematic network troubleshooting methodology
 - Check which processes are using network ports
 
-**Estimated Time:** 1 hour
+**Estimated Time:** 30 mins
 
 ---
 
