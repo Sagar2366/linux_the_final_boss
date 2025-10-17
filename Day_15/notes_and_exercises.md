@@ -27,13 +27,6 @@ By the end of Day 15, you will:
 
 ---
 
-## Sample Environment Setup
-
-```bash
-# Create test directory
-mkdir -p ~/day15_test/{logs,scripts}
-```
-
 ## Part 1: Basic Networking Concepts
 
 ### TCP/IP Layers
