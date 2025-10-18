@@ -1,5 +1,21 @@
 # Day 11: Pipes, Redirects, Wildcards, and Links
 
+## Table of Contents
+
+- [Day 11: Pipes, Redirects, Wildcards, and Links](#day-11-pipes-redirects-wildcards-and-links)
+  - [Learning Objectives](#learning-objectives)
+  - [Sample Environment Setup](#sample-environment-setup)
+- [View initial state](#view-initial-state)
+  - [Why These Tools Matter:](#why-these-tools-matter)
+    - [File Descriptors (Streams):](#file-descriptors-streams)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 11, you will:
 - Master pipes for command chaining

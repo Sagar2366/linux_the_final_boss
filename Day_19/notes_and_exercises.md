@@ -1,5 +1,24 @@
 # Day 19: Advanced Linux Storage & Filesystems (ext4, xfs, btrfs, quotas, tuning)
 
+## Table of Contents
+
+- [Day 19: Advanced Linux Storage & Filesystems (ext4, xfs, btrfs, quotas, tuning)](#day-19-advanced-linux-storage-&-filesystems-ext4-xfs-btrfs-quotas-tuning)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [Filesystem creation](#filesystem-creation)
+- [Mounting](#mounting)
+- [Quotas](#quotas)
+- [Maintenance](#maintenance)
+  - [Best Practices](#best-practices)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 19, you will:
 - Understand different Linux filesystems and their use cases

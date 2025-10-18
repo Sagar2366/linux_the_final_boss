@@ -1,5 +1,23 @@
 # Day 16: Security, Firewalls & Hardening
 
+## Table of Contents
+
+- [Day 16: Security, Firewalls & Hardening](#day-16-security-firewalls-&-hardening)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [Firewall management](#firewall-management)
+- [Security monitoring](#security-monitoring)
+- [System hardening](#system-hardening)
+  - [Security Best Practices](#security-best-practices)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 16, you will:
 - Implement system security best practices

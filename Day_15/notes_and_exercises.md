@@ -1,5 +1,23 @@
 # Day 15: Networking Basics & Troubleshooting
 
+## Table of Contents
+
+- [Day 15: Networking & Troubleshooting](#day-15-networking-&-troubleshooting)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [Network configuration](#network-configuration)
+- [Connectivity testing](#connectivity-testing)
+- [Port and service analysis](#port-and-service-analysis)
+- [DNS resolution](#dns-resolution)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 15, you will:
 - Understand basic TCP/IP and networking concepts

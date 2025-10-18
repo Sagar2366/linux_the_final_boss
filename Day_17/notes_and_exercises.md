@@ -1,5 +1,23 @@
 # Day 17: Package Management (apt, yum, dnf, rpm)
 
+## Table of Contents
+
+- [Day 17: Package Management (apt, yum, dnf, rpm)](#day-17-package-management-apt-yum-dnf-rpm)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [APT (Debian/Ubuntu)](#apt-debianubuntu)
+- [YUM/DNF (RHEL/CentOS/Fedora)](#yumdnf-rhelcentosfedora)
+- [Universal](#universal)
+  - [Best Practices](#best-practices)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 17, you will:
 - Master package management across different Linux distributions

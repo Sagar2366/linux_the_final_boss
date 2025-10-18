@@ -1,5 +1,22 @@
 # Day 13: Process Management & Scheduling (cron, at, anacron)
 
+## Table of Contents
+
+- [Day 13: Process Management & Scheduling (cron, at, anacron)](#day-13-process-management-&-scheduling-cron-at-anacron)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [Cron management](#cron-management)
+- [At scheduling](#at-scheduling)
+- [Process control](#process-control)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 13, you will:
 - Master process viewing, control, signals, and prioritisation
