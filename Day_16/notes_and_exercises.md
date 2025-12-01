@@ -84,6 +84,7 @@ echo "Environment setup complete!"
 ## Part 1: Linux Security Fundamentals
 
 ### Understanding the Threat Landscape
+The threat landscape is the set of potential attackers, their motives and methods, known vulnerabilities, and common attack vectors targeting systems. Understanding it helps prioritize defenses, patching, and monitoring.
 
 **Common Linux Security Threats:**
 
@@ -101,6 +102,7 @@ echo "Environment setup complete!"
 ### Security Principles
 
 **The CIA Triad:**
+Core security principles like Confidentiality, Integrity, Availability, Defense in Depth, and the Principle of Least Privilege guide how you design and apply controls — for example, choosing encryption for confidentiality, checksums for integrity, redundancy for availability, and layered controls for resilience.
 
 | Principle | Definition | Implementation |
 |-----------|------------|----------------|
