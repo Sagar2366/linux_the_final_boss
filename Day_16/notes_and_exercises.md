@@ -433,6 +433,7 @@ firewall-cmd --reload
 ---
 
 ## Part 3: System Hardening
+System hardening is the process of reducing an operating system or application's attack surface by applying configuration, policy, and code controls so the system is more secure and resilient. It includes removing or disabling unnecessary services, applying secure configuration baselines, tightening file and network permissions, enforcing strong authentication, patching, encrypting sensitive data, and enabling auditing and monitoring.
 
 ### Command Reference: System Hardening
 
