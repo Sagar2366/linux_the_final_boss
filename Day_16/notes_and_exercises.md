@@ -1,517 +1,371 @@
 # Day 16: Security, Firewalls & Hardening
 
-## Learning Objectives
-By the end of Day 16, you will:
-- Understand Linux security fundamentals and threat landscape
-- Configure and manage firewalls (ufw, iptables, firewalld)
-- Implement system hardening best practices
-- Set up intrusion detection and prevention (fail2ban)
-- Monitor security events and analyze logs
-- Apply encryption and secure authentication methods
-- Perform security audits and vulnerability assessments
-
+## Overview
 **Estimated Time:** 1 hour
 
----
+Master Linux security fundamentals, firewall configuration, system hardening, and intrusion prevention to protect systems from threats and maintain compliance with security standards.
 
-## Why Security & Hardening Matter
-
-| Aspect | Importance | Real-World Impact |
-|--------|------------|-------------------|
-| **Data Protection** | Prevent unauthorized access to sensitive data | Avoid data breaches, comply with regulations (GDPR, HIPAA) |
-| **System Integrity** | Maintain system reliability and availability | Prevent downtime, maintain business continuity |
-| **Attack Prevention** | Stop malicious activities before they succeed | Reduce incident response costs, protect reputation |
-| **Compliance** | Meet security standards and regulations | Avoid fines, maintain certifications (SOC2, ISO27001) |
-| **Access Control** | Ensure only authorized users access resources | Prevent insider threats, maintain audit trails |
-| **Network Security** | Protect against network-based attacks | Stop DDoS, prevent lateral movement in breaches |
-
-**Essential for:** DevOps engineers, SREs, System Administrators, Security teams, Cloud engineers
+### Why Security Matters
+Security isn't optional—it's essential for protecting data, maintaining system integrity, preventing costly breaches, and meeting regulatory requirements (GDPR, HIPAA, SOC2).
 
 ---
 
-## Sample Environment Setup
+## Quick Start: Test Environment Setup
 
 ```bash
-# Create test directory structure
-mkdir -p ~/day16_test/{configs,logs,scripts,keys,backups}
+# Create test environment
+mkdir -p ~/security-lab/{configs,logs,scripts,keys,backups}
 
 # Create sample sensitive files
-echo "database_password=super_secret_123" > ~/day16_test/configs/app.conf
-echo "api_key=sk-1234567890abcdef" > ~/day16_test/configs/api.conf
-echo "Important business data" > ~/day16_test/sensitive.txt
+cat > ~/security-lab/configs/app.conf << 'EOF'
+database_password=super_secret_123
+api_key=sk-1234567890abcdef
+EOF
 
-# Create test users and files for permission testing
-sudo useradd -m testuser1 2>/dev/null || true
-sudo useradd -m testuser2 2>/dev/null || true
-
-# Create scripts for testing
-cat > ~/day16_test/scripts/security-check.sh << 'EOF'
+# Create security check script
+cat > ~/security-lab/scripts/quick-check.sh << 'EOF'
 #!/bin/bash
-echo "Security check started at $(date)"
-echo "Checking for failed login attempts..."
-grep "Failed password" /var/log/auth.log 2>/dev/null | tail -5 || echo "No auth.log found"
-echo "Checking open ports..."
-ss -tuln | grep LISTEN | head -5
-echo "Security check completed"
+echo "=== Quick Security Check ==="
+echo "Listening ports:"; ss -tuln | grep LISTEN | head -5
+echo "Recent failed logins:"; grep "Failed password" /var/log/auth.log 2>/dev/null | tail -3 || echo "No auth.log access"
+echo "Running services:"; systemctl list-units --type=service --state=running | wc -l | xargs echo "Active services:"
 EOF
 
-cat > ~/day16_test/scripts/backup-secure.sh << 'EOF'
-#!/bin/bash
-echo "Creating secure backup at $(date)"
-tar -czf ~/day16_test/backups/secure-backup-$(date +%Y%m%d).tar.gz ~/day16_test/configs/
-echo "Backup completed"
-EOF
-
-chmod +x ~/day16_test/scripts/*.sh
-
-# Create sample log entries for testing
-mkdir -p ~/day16_test/logs
-cat > ~/day16_test/logs/access.log << 'EOF'
-192.168.1.100 - - [16/Oct/2025:10:00:01 +0000] "GET / HTTP/1.1" 200 1234
-192.168.1.101 - - [16/Oct/2025:10:00:02 +0000] "POST /login HTTP/1.1" 401 567
-192.168.1.102 - - [16/Oct/2025:10:00:03 +0000] "GET /admin HTTP/1.1" 403 234
-10.0.0.50 - - [16/Oct/2025:10:00:04 +0000] "GET /api/data HTTP/1.1" 200 5678
-192.168.1.101 - - [16/Oct/2025:10:00:05 +0000] "POST /login HTTP/1.1" 401 567
-EOF
-
-# Verify setup
-ls -la ~/day16_test/
-echo "Environment setup complete!"
+chmod +x ~/security-lab/scripts/quick-check.sh
+~/security-lab/scripts/quick-check.sh
 ```
 
 ---
 
-## Part 1: Linux Security Fundamentals
+## Part 1: Security Fundamentals
 
-### Understanding the Threat Landscape
-The threat landscape is the set of potential attackers, their motives and methods, known vulnerabilities, and common attack vectors targeting systems. Understanding it helps prioritize defenses, patching, and monitoring.
+### The Threat Landscape
 
-**Common Linux Security Threats:**
+**Common Threats:**
 
-| Threat Type | Description | Attack Vector | Impact |
-|-------------|-------------|---------------|---------|
-| **Brute Force** | Repeated login attempts | SSH, web logins, FTP | Account compromise, system access |
-| **Privilege Escalation** | Gaining higher permissions | Exploiting SUID, sudo misconfig | Full system compromise |
-| **Malware/Rootkits** | Malicious software | Downloads, email, USB | Data theft, system control |
-| **DDoS Attacks** | Overwhelming system resources | Network flooding | Service unavailability |
-| **Data Breaches** | Unauthorized data access | Weak permissions, SQL injection | Data loss, compliance violations |
-| **Insider Threats** | Malicious internal users | Legitimate access abuse | Data theft, sabotage |
-| **Zero-day Exploits** | Unknown vulnerabilities | Unpatched software | System compromise |
-| **Social Engineering** | Human manipulation | Phishing, pretexting | Credential theft, access |
+| Threat | Attack Vector | Impact | Mitigation |
+|--------|---------------|---------|------------|
+| **Brute Force** | Repeated login attempts | Account compromise | fail2ban, strong passwords, key auth |
+| **Privilege Escalation** | SUID exploits, sudo misconfig | Full system control | Least privilege, audit SUID files |
+| **Malware/Rootkits** | Downloads, compromised packages | Data theft, backdoors | Verify signatures, use trusted repos |
+| **DDoS** | Network flooding | Service unavailability | Rate limiting, firewall rules |
+| **Data Breach** | Weak permissions, injection | Data loss, fines | Encryption, access controls |
+| **Insider Threats** | Legitimate access abuse | Data theft, sabotage | Audit logs, least privilege |
 
-### Security Principles
-
-**The CIA Triad:**
-Core security principles like Confidentiality, Integrity, Availability, Defense in Depth, and the Principle of Least Privilege guide how you design and apply controls — for example, choosing encryption for confidentiality, checksums for integrity, redundancy for availability, and layered controls for resilience.
-
-| Principle | Definition | Implementation |
-|-----------|------------|----------------|
-| **Confidentiality** | Information accessible only to authorized users | Encryption, access controls, authentication |
-| **Integrity** | Information remains accurate and unaltered | Checksums, digital signatures, version control |
-| **Availability** | Information accessible when needed | Redundancy, backups, monitoring |
-
-**Defense in Depth:**
+### Security Principles: CIA Triad
 
 ```
 ┌─────────────────────────────────────────┐
-│  Physical Security (Data Center)        │
+│  CONFIDENTIALITY                        │
+│  → Encryption, access controls, auth   │
 ├─────────────────────────────────────────┤
-│  Network Security (Firewalls, IDS)      │
+│  INTEGRITY                              │
+│  → Checksums, signatures, version ctrl │
 ├─────────────────────────────────────────┤
-│  Host Security (OS Hardening, AV)       │
-├─────────────────────────────────────────┤
-│  Application Security (Input validation)│
-├─────────────────────────────────────────┤
-│  Data Security (Encryption, Backups)    │
+│  AVAILABILITY                           │
+│  → Redundancy, backups, monitoring     │
 └─────────────────────────────────────────┘
 ```
 
-### Command Reference: Security Assessment
-
-| Command | Usage | Description | Key Options |
-|---------|-------|-------------|-------------|
-| **ss** | `ss [options]` | Show network connections | `-tuln` = TCP/UDP listening<br>`-p` = show processes<br>`-s` = summary |
-| **netstat** | `netstat [options]` | Network statistics (legacy) | `-tuln` = TCP/UDP listening<br>`-p` = show PIDs |
-| **lsof** | `lsof [options]` | List open files/connections | `-i` = network connections<br>`-p PID` = by process<br>`-u USER` = by user |
-| **ps** | `ps [options]` | Show running processes | `aux` = all processes<br>`-eo` = custom format |
-| **systemctl** | `systemctl [action] [service]` | Manage services | `list-units` = show services<br>`status` = service status |
-| **find** | `find [path] [options]` | Find files by criteria | `-perm` = by permissions<br>`-user` = by owner<br>`-type` = file type |
-| **grep** | `grep [options] pattern file` | Search text patterns | `-r` = recursive<br>`-i` = case insensitive<br>`-v` = invert match |
-| **last** | `last [options]` | Show login history | `-n NUM` = last N entries<br>`-f FILE` = specific log |
-| **lastb** | `lastb [options]` | Show failed login attempts | `-n NUM` = last N entries |
-| **who** | `who [options]` | Show logged in users | `-a` = all info<br>`-b` = boot time |
-| **w** | `w [user]` | Show user activity | Shows load, uptime, user sessions |
-
-### Security Assessment Commands
+### Essential Security Assessment Commands
 
 ```bash
-# 1. Check running services
-systemctl list-units --type=service --state=running
-systemctl list-units --type=service --state=enabled
+# System Overview
+systemctl list-units --type=service --state=running    # Running services
+ss -tuln                                                # Listening ports
+ps aux --sort=-%cpu | head -10                         # Top CPU processes
+df -h                                                   # Disk usage
 
-# 2. Check listening ports
-ss -tuln
-sudo ss -tulnp  # With process names
+# User Activity
+who -a                                                  # Current users
+last -n 20                                             # Recent logins
+lastb -n 10                                            # Failed logins
+w                                                       # User activity
 
-# 3. Check network connections
-ss -tun state established
-sudo lsof -i  # All network connections
+# Security Checks
+find /etc -type f -perm -002 2>/dev/null               # World-writable files
+find /usr/bin -type f -perm -4000 2>/dev/null          # SUID files
+grep "Failed password" /var/log/auth.log | tail -10    # Failed SSH attempts
 
-# 4. Check running processes
-ps aux --sort=-%cpu | head -20
-ps aux --sort=-%mem | head -20
-
-# 5. Check user sessions
-who -a
-w
-last -n 20
-
-# 6. Check failed login attempts
-sudo lastb -n 20
-grep "Failed password" /var/log/auth.log 2>/dev/null | tail -10
-
-# 7. Check file permissions
-find /etc -type f -perm -002 2>/dev/null  # World-writable files
-find /home -type f -perm -4000 2>/dev/null  # SUID files
-
-# 8. Check system information
-uname -a
-cat /etc/os-release
-uptime
+# Network Analysis
+sudo ss -tulnp                                          # Listening with processes
+sudo lsof -i                                           # Network connections
+netstat -tuln 2>/dev/null                              # Alternative (if available)
 ```
 
 ### Hands-On: Security Assessment
 
 ```bash
-# 1. Run our security check script
-~/day16_test/scripts/security-check.sh
+# Create comprehensive security audit script
+cat > ~/security-lab/scripts/security-audit.sh << 'EOF'
+#!/bin/bash
+echo "=== SECURITY AUDIT REPORT ==="
+echo "Generated: $(date)"
+echo ""
 
-# 2. Check what services are running
-systemctl list-units --type=service --state=running | grep -E "(ssh|http|ftp|telnet|mysql|postgres)"
+echo "1. SYSTEM INFO:"
+echo "   OS: $(cat /etc/os-release | grep PRETTY_NAME | cut -d'"' -f2)"
+echo "   Kernel: $(uname -r)"
+echo "   Uptime: $(uptime -p)"
+echo ""
 
-# 3. Check listening ports
-echo "=== Listening Ports ==="
-sudo ss -tulnp | grep LISTEN
+echo "2. LISTENING PORTS (Top 10):"
+ss -tuln | grep LISTEN | head -10
+echo ""
 
-# 4. Check for suspicious processes
-echo "=== Top CPU Processes ==="
-ps aux --sort=-%cpu | head -10
+echo "3. RUNNING SERVICES (Count):"
+systemctl list-units --type=service --state=running | grep -c "\.service"
+echo ""
 
-# 5. Check recent logins
-echo "=== Recent Logins ==="
-last -n 10
+echo "4. FAILED LOGIN ATTEMPTS (Last 5):"
+grep "Failed password" /var/log/auth.log 2>/dev/null | tail -5 | awk '{print $1, $2, $11}' || echo "   No auth.log access"
+echo ""
 
-# 6. Check for world-writable files in sensitive directories
-echo "=== World-Writable Files ==="
-find /etc /usr/bin /usr/sbin -type f -perm -002 2>/dev/null | head -10
+echo "5. WORLD-WRITABLE FILES (First 5):"
+find /etc /usr/bin -type f -perm -002 2>/dev/null | head -5 || echo "   None found"
+echo ""
 
-# 7. Check SUID/SGID files
-echo "=== SUID Files ==="
-find /usr/bin /usr/sbin -type f -perm -4000 2>/dev/null | head -10
+echo "6. SUID FILES (Count):"
+find /usr/bin /usr/sbin -type f -perm -4000 2>/dev/null | wc -l | xargs echo "   SUID files:"
+echo ""
+
+echo "7. DISK USAGE:"
+df -h / /home 2>/dev/null | tail -n +2
+echo ""
+
+echo "=== AUDIT COMPLETE ==="
+EOF
+
+chmod +x ~/security-lab/scripts/security-audit.sh
+~/security-lab/scripts/security-audit.sh
 ```
 
 ---
 
-## Part 2: Firewall Configuration & Management
+## Part 2: Firewall Configuration
 
-### Understanding Firewalls
+### Firewall Tools Comparison
 
-**What is a Firewall?**
-A firewall is a network security system that monitors and controls incoming and outgoing network traffic based on predetermined security rules.
-
-**Types of Firewalls:**
-
-| Type | Description | Use Case | Examples |
-|------|-------------|----------|----------|
-| **Packet Filter** | Examines packets, allows/blocks based on rules | Basic protection, high performance | iptables, netfilter |
-| **Stateful** | Tracks connection state, context-aware | Most common, good security/performance balance | ufw, firewalld |
-| **Application** | Inspects application layer data | Deep packet inspection, advanced threats | Proxy firewalls, WAF |
-| **Next-Gen** | AI/ML-based, threat intelligence | Enterprise, advanced persistent threats | Commercial solutions |
-
-### Command Reference: Firewall Tools
-
-| Tool | Distribution | Complexity | Description |
-|------|-------------|------------|-------------|
-| **ufw** | Ubuntu/Debian | Simple | Uncomplicated Firewall - easy to use |
-| **firewalld** | RHEL/CentOS/Fedora | Medium | Zone-based firewall with dynamic rules |
-| **iptables** | All Linux | Advanced | Low-level netfilter interface |
-| **nftables** | Modern Linux | Advanced | Replacement for iptables |
+| Tool | Distribution | Difficulty | Best For |
+|------|-------------|------------|----------|
+| **ufw** | Ubuntu/Debian | ⭐ Easy | Quick setup, simple rules |
+| **firewalld** | RHEL/CentOS/Fedora | ⭐⭐ Medium | Zone-based management |
+| **iptables** | All Linux | ⭐⭐⭐ Advanced | Fine-grained control |
+| **nftables** | Modern Linux | ⭐⭐⭐ Advanced | iptables replacement |
 
 ### UFW (Uncomplicated Firewall)
 
-**UFW Commands:**
-
-| Command | Purpose | Example |
-|---------|---------|---------|
-| `ufw enable` | Enable firewall | `sudo ufw enable` |
-| `ufw disable` | Disable firewall | `sudo ufw disable` |
-| `ufw status` | Show firewall status | `ufw status verbose` |
-| `ufw allow` | Allow traffic | `ufw allow 22/tcp` |
-| `ufw deny` | Block traffic | `ufw deny 23` |
-| `ufw delete` | Remove rule | `ufw delete allow 80` |
-| `ufw reset` | Reset to defaults | `sudo ufw reset` |
-| `ufw reload` | Reload rules | `sudo ufw reload` |
-
-**UFW Rule Syntax:**
+**Essential UFW Commands:**
 
 ```bash
-# Basic port rules
-ufw allow 22                    # Allow port 22 (any protocol)
-ufw allow 22/tcp               # Allow port 22 TCP only
-ufw allow 80,443/tcp           # Allow multiple ports
-ufw allow 8000:8010/tcp        # Allow port range
+# Basic Management
+sudo ufw status verbose            # Show current rules
+sudo ufw enable                    # Enable firewall
+sudo ufw disable                   # Disable firewall
+sudo ufw reload                    # Reload rules
 
-# Service-based rules
-ufw allow ssh                  # Allow SSH service
-ufw allow http                 # Allow HTTP service
-ufw allow https                # Allow HTTPS service
+# Set Default Policies
+sudo ufw default deny incoming     # Block incoming by default
+sudo ufw default allow outgoing    # Allow outgoing by default
 
-# IP-based rules
-ufw allow from 192.168.1.100   # Allow from specific IP
-ufw allow from 192.168.1.0/24  # Allow from subnet
-ufw deny from 10.0.0.50        # Block specific IP
+# Simple Rules
+sudo ufw allow 22                  # Allow SSH (any protocol)
+sudo ufw allow 22/tcp             # Allow SSH (TCP only)
+sudo ufw allow ssh                # Allow SSH (by service name)
+sudo ufw allow 80,443/tcp         # Allow HTTP and HTTPS
+sudo ufw deny 23                  # Deny telnet
 
-# Advanced rules
-ufw allow from 192.168.1.0/24 to any port 22  # SSH from local network only
-ufw allow out 53               # Allow outgoing DNS
-ufw deny out 25                # Block outgoing SMTP
+# Advanced Rules
+sudo ufw allow from 192.168.1.0/24                           # Allow entire subnet
+sudo ufw allow from 192.168.1.0/24 to any port 22           # SSH from local network
+sudo ufw deny from 10.0.0.50                                 # Block specific IP
+sudo ufw allow proto tcp from any to any port 8080:8090     # Port range
+
+# Rule Management
+sudo ufw status numbered          # Show numbered rules
+sudo ufw delete 3                 # Delete rule number 3
+sudo ufw delete allow 80          # Delete by rule definition
+
+# Logging
+sudo ufw logging on               # Enable logging
+sudo ufw logging medium           # Set log level
+sudo tail -f /var/log/ufw.log    # Monitor logs
 ```
 
-### Hands-On: UFW Configuration
+### Complete UFW Setup Example
 
 ```bash
-# 1. Check UFW status
-sudo ufw status verbose
+# 1. Check current status
+sudo ufw status
 
-# 2. If not installed, install UFW (Ubuntu/Debian)
-# sudo apt update && sudo apt install ufw
+# 2. Reset to defaults (if needed)
+# sudo ufw --force reset
 
 # 3. Set default policies
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
 # 4. Allow essential services
-sudo ufw allow ssh              # Allow SSH (port 22)
-sudo ufw allow 80/tcp          # Allow HTTP
-sudo ufw allow 443/tcp         # Allow HTTPS
+sudo ufw allow ssh                # SSH (port 22)
+sudo ufw allow http               # HTTP (port 80)
+sudo ufw allow https              # HTTPS (port 443)
 
-# 5. Allow from specific networks
-sudo ufw allow from 192.168.1.0/24 to any port 22  # SSH from local network only
+# 5. Allow from trusted network only
+sudo ufw allow from 192.168.1.0/24 to any port 3306  # MySQL from local network
 
-# 6. Enable the firewall
+# 6. Rate limiting (prevent brute force)
+sudo ufw limit ssh                # Rate limit SSH connections
+
+# 7. Enable firewall
 sudo ufw enable
 
-# 7. Check status
+# 8. Verify configuration
 sudo ufw status numbered
-
-# 8. Test a rule (allow temporary service)
-sudo ufw allow 8080/tcp
-curl -I http://localhost:8080 2>/dev/null || echo "Service not running on 8080"
-
-# 9. Remove the test rule
-sudo ufw delete allow 8080/tcp
-
-# 10. View logs (if logging enabled)
-sudo ufw logging on
-sudo tail -f /var/log/ufw.log &
-# Stop with: sudo pkill tail
 ```
 
 ### Iptables (Advanced)
 
 **Iptables Concepts:**
 
-| Concept | Description | Example |
-|---------|-------------|---------|
-| **Tables** | Different rule categories | filter, nat, mangle, raw |
-| **Chains** | Rule sequences | INPUT, OUTPUT, FORWARD |
-| **Targets** | Actions for packets | ACCEPT, DROP, REJECT, LOG |
-| **Matches** | Packet criteria | -p tcp, --dport 80, -s IP |
+```
+Tables:  filter (default), nat, mangle, raw
+Chains:  INPUT (incoming), OUTPUT (outgoing), FORWARD (routing)
+Targets: ACCEPT (allow), DROP (silent block), REJECT (block with response)
+```
 
 **Common Iptables Commands:**
 
 ```bash
-# View rules
-iptables -L -n                 # List all rules (numeric)
-iptables -L INPUT -n --line-numbers  # Numbered INPUT rules
-iptables -t nat -L -n          # NAT table rules
+# View Rules
+sudo iptables -L -n                              # List all rules (numeric)
+sudo iptables -L INPUT -n --line-numbers        # Show INPUT chain with numbers
+sudo iptables -t nat -L -n                      # Show NAT table
 
-# Basic rules
-iptables -A INPUT -p tcp --dport 22 -j ACCEPT     # Allow SSH
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT     # Allow HTTP
-iptables -A INPUT -j DROP                         # Drop everything else
-
-# Source-based rules
-iptables -A INPUT -s 192.168.1.0/24 -j ACCEPT    # Allow from subnet
-iptables -A INPUT -s 10.0.0.50 -j DROP           # Block specific IP
-
-# State-based rules (stateful firewall)
-iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-iptables -A INPUT -m state --state NEW -p tcp --dport 22 -j ACCEPT
-
-# Save rules (varies by distribution)
-iptables-save > /etc/iptables/rules.v4           # Debian/Ubuntu
-service iptables save                             # RHEL/CentOS
-```
-
-### Hands-On: Basic Iptables
-
-```bash
-# 1. View current rules
-sudo iptables -L -n
-
-# 2. Create a backup of current rules
-sudo iptables-save > ~/day16_test/backups/iptables-backup.rules
-
-# 3. Allow loopback traffic (essential)
-sudo iptables -A INPUT -i lo -j ACCEPT
-sudo iptables -A OUTPUT -o lo -j ACCEPT
-
-# 4. Allow established connections
+# Accept Established Connections (Essential!)
 sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-# 5. Allow SSH (be careful not to lock yourself out!)
-sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+# Allow Loopback
+sudo iptables -A INPUT -i lo -j ACCEPT
 
-# 6. Allow HTTP and HTTPS
-sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+# Allow Specific Services
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT     # SSH
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT     # HTTP
+sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT    # HTTPS
 
-# 7. Log dropped packets (optional)
-sudo iptables -A INPUT -j LOG --log-prefix "DROPPED: "
+# Allow from Specific IP/Subnet
+sudo iptables -A INPUT -s 192.168.1.0/24 -j ACCEPT
+sudo iptables -A INPUT -s 10.0.0.50 -j DROP
 
-# 8. Drop everything else
+# Drop All Other Incoming
 sudo iptables -A INPUT -j DROP
 
-# 9. View the rules
-sudo iptables -L -n --line-numbers
+# Save Rules (Debian/Ubuntu)
+sudo iptables-save > /etc/iptables/rules.v4
 
-# 10. Test connectivity (in another terminal)
-# ssh localhost  # Should work
-# telnet localhost 23  # Should fail/timeout
+# Save Rules (RHEL/CentOS)
+sudo service iptables save
 
-# 11. To restore original rules (if needed)
-# sudo iptables-restore < ~/day16_test/backups/iptables-backup.rules
+# Restore Rules
+sudo iptables-restore < /etc/iptables/rules.v4
 ```
 
 ### Firewalld (RHEL/CentOS/Fedora)
 
-**Firewalld Concepts:**
-
-| Concept | Description | Example |
-|---------|-------------|---------|
-| **Zones** | Network trust levels | public, internal, dmz, trusted |
-| **Services** | Predefined service rules | ssh, http, https, mysql |
-| **Rich Rules** | Complex rule definitions | Allow specific IP to specific port |
-| **Runtime vs Permanent** | Temporary vs persistent rules | --permanent flag |
-
-**Common Firewalld Commands:**
+**Zone-Based Management:**
 
 ```bash
-# Zone management
-firewall-cmd --get-default-zone
-firewall-cmd --list-all-zones
-firewall-cmd --set-default-zone=public
+# Zone Management
+firewall-cmd --get-default-zone                # Show default zone
+firewall-cmd --list-all-zones                  # List all zones
+firewall-cmd --set-default-zone=public         # Set default zone
 
-# Service management
-firewall-cmd --list-services
-firewall-cmd --add-service=http --permanent
+# Service Management
+firewall-cmd --list-services                   # List allowed services
+firewall-cmd --add-service=http --permanent    # Add service
 firewall-cmd --remove-service=dhcpv6-client --permanent
 
-# Port management
+# Port Management
 firewall-cmd --add-port=8080/tcp --permanent
-firewall-cmd --remove-port=8080/tcp --permanent
+firewall-cmd --list-ports
 
-# IP management
+# Source Management
 firewall-cmd --add-source=192.168.1.0/24 --zone=internal --permanent
-firewall-cmd --remove-source=10.0.0.50 --permanent
 
-# Apply changes
+# Apply Changes
 firewall-cmd --reload
+
+# Rich Rules (Advanced)
+firewall-cmd --add-rich-rule='rule family="ipv4" source address="192.168.1.0/24" port port=22 protocol=tcp accept' --permanent
 ```
 
 ---
 
 ## Part 3: System Hardening
-System hardening is the process of reducing an operating system or application's attack surface by applying configuration, policy, and code controls so the system is more secure and resilient. It includes removing or disabling unnecessary services, applying secure configuration baselines, tightening file and network permissions, enforcing strong authentication, patching, encrypting sensitive data, and enabling auditing and monitoring.
 
-### Command Reference: System Hardening
-
-| Command | Purpose | Example |
-|---------|---------|---------|
-| `chmod` | Change file permissions | `chmod 600 sensitive_file` |
-| `chown` | Change file ownership | `chown user:group file` |
-| `umask` | Set default permissions | `umask 027` |
-| `chage` | Manage password aging | `chage -M 90 username` |
-| `passwd` | Change passwords | `passwd -l username` (lock) |
-| `usermod` | Modify user accounts | `usermod -L username` (lock) |
-| `systemctl` | Manage services | `systemctl disable telnet` |
-| `update-alternatives` | Manage alternatives | `update-alternatives --config editor` |
-
-### File Permissions & Ownership
+### File Permissions Security
 
 **Understanding Linux Permissions:**
 
 ```
--rwxrw-r--  1 user group 1234 Oct 16 10:00 filename
- ↓↓↓↓↓↓↓↓↓
- ||||||||└─ Other permissions (read)
- |||||||└── Other permissions (write) - MISSING
- ||||||└─── Other permissions (execute) - MISSING
- |||||└──── Group permissions (read)
- ||||└───── Group permissions (write)
- |||└────── Group permissions (execute) - MISSING
- ||└─────── Owner permissions (read)
- |└──────── Owner permissions (write)
- └───────── Owner permissions (execute)
+-rwxrw-r--  1 user group size date filename
+ │││││││││
+ │││└┴┴┴┴┴─ Others: read only (r--)
+ ││└┴┴┴──── Group: read, write (rw-)
+ │└┴┴┴───── Owner: read, write, execute (rwx)
+ └────────── File type: - (regular file)
 ```
 
 **Permission Values:**
 
-| Permission | Numeric | Symbolic | Meaning |
-|------------|---------|----------|---------|
-| Read | 4 | r | View file contents / List directory |
-| Write | 2 | w | Modify file / Create/delete in directory |
-| Execute | 1 | x | Run file / Enter directory |
+| Permission | Numeric | Symbolic | Meaning for Files | Meaning for Directories |
+|------------|---------|----------|-------------------|-------------------------|
+| Read | 4 | r | View contents | List contents |
+| Write | 2 | w | Modify contents | Create/delete files |
+| Execute | 1 | x | Run as program | Enter directory |
 
-**Common Permission Patterns:**
+**Secure Permission Patterns:**
 
-| Permissions | Numeric | Use Case |
-|-------------|---------|----------|
-| `-rw-------` | 600 | Private files (SSH keys, passwords) |
-| `-rw-r--r--` | 644 | Public readable files (configs, docs) |
-| `-rwx------` | 700 | Private executables (user scripts) |
-| `-rwxr-xr-x` | 755 | Public executables (system binaries) |
-| `drwx------` | 700 | Private directories (user home) |
-| `drwxr-xr-x` | 755 | Public directories |
+| Permissions | Numeric | Use Case | Example |
+|-------------|---------|----------|---------|
+| `-rw-------` | 600 | Private files | SSH keys, passwords |
+| `-rw-r--r--` | 644 | Public readable | Config files, docs |
+| `-rwx------` | 700 | Private scripts | User executables |
+| `-rwxr-xr-x` | 755 | Public programs | System binaries |
+| `drwx------` | 700 | Private folders | ~/.ssh directory |
+| `drwxr-xr-x` | 755 | Public folders | /usr/local/bin |
 
-### Secure File Permissions
+### Secure File Permissions Practice
 
 ```bash
-# 1. Find world-writable files (security risk)
-find /etc /usr/bin /usr/sbin -type f -perm -002 2>/dev/null
+# 1. Find security vulnerabilities
+echo "=== Finding Security Issues ==="
 
-# 2. Find files with no owner (orphaned files)
+# World-writable files (dangerous!)
+find /etc /usr/bin -type f -perm -002 2>/dev/null | head -5
+
+# SUID files (potential privilege escalation)
+find /usr/bin /usr/sbin -type f -perm -4000 2>/dev/null
+
+# Files with no owner (orphaned)
 find /home -nouser -o -nogroup 2>/dev/null
 
-# 3. Find SUID/SGID files (potential privilege escalation)
-find /usr/bin /usr/sbin -type f \( -perm -4000 -o -perm -2000 \) 2>/dev/null
+# 2. Secure sensitive files
+echo "=== Securing Files ==="
+chmod 600 ~/security-lab/configs/app.conf          # Owner read/write only
+chmod 700 ~/security-lab/configs                   # Owner full access only
+chmod 700 ~/security-lab/keys                      # Private key directory
 
-# 4. Secure sensitive files
-chmod 600 ~/day16_test/configs/app.conf
-chmod 600 ~/day16_test/configs/api.conf
-chmod 600 ~/day16_test/sensitive.txt
+# 3. Set secure umask (default permissions for new files)
+umask 027                                           # New files: 640, Directories: 750
+echo "umask 027" >> ~/.bashrc                      # Make permanent
 
-# 5. Secure directories
-chmod 700 ~/day16_test/configs
-chmod 700 ~/day16_test/keys
+# 4. Verify permissions
+ls -la ~/security-lab/configs/
 
-# 6. Set restrictive umask (new files created with secure permissions)
-umask 027  # New files: 640, New directories: 750
-
-# 7. Verify permissions
-ls -la ~/day16_test/configs/
-ls -la ~/day16_test/
+# 5. Create test file with new umask
+touch ~/security-lab/test-file.txt
+ls -l ~/security-lab/test-file.txt
+rm ~/security-lab/test-file.txt
 ```
 
 ### User Account Security
@@ -519,54 +373,47 @@ ls -la ~/day16_test/
 **Password Policies:**
 
 ```bash
-# 1. View password aging info
+# View password aging information
 chage -l $USER
 
-# 2. Set password aging (requires root)
-sudo chage -M 90 -m 7 -W 14 testuser1  # Max 90 days, min 7 days, warn 14 days before
+# Set password policies (requires root)
+sudo chage -M 90 -m 7 -W 14 username    # Max 90 days, min 7 days, warn 14 days
+sudo chage -d 0 username                # Force password change on next login
+sudo chage -E 2025-12-31 username       # Set account expiration
 
-# 3. Force password change on next login
-sudo chage -d 0 testuser1
+# Lock/Unlock accounts
+sudo usermod -L username                # Lock account
+sudo passwd -l username                 # Lock password
+sudo usermod -U username                # Unlock account
+sudo passwd -u username                 # Unlock password
 
-# 4. Lock user account
-sudo usermod -L testuser2
-# Or: sudo passwd -l testuser2
+# Check account status
+sudo passwd -S username                 # Show password status
 
-# 5. Unlock user account
-sudo usermod -U testuser2
-# Or: sudo passwd -u testuser2
-
-# 6. Set account expiration
-sudo chage -E 2025-12-31 testuser1
-
-# 7. View locked accounts
-sudo passwd -S testuser1
-sudo passwd -S testuser2
+# View locked accounts
+sudo passwd -S -a | grep " L "
 ```
 
 **Sudo Configuration:**
 
 ```bash
-# 1. View sudo configuration
-sudo cat /etc/sudoers
-
-# 2. Edit sudoers safely
+# Edit sudoers file safely
 sudo visudo
 
-# 3. Common sudoers entries:
+# Common sudoers patterns:
 # Allow user to run specific commands:
 # username ALL=(ALL) /usr/bin/systemctl restart nginx
-# 
-# Allow group to run commands without password:
+
+# Allow group without password:
 # %admin ALL=(ALL) NOPASSWD: /usr/bin/apt update, /usr/bin/apt upgrade
-#
+
 # Restrict to specific hosts:
 # username webserver=(ALL) /usr/bin/systemctl restart apache2
 
-# 4. Check sudo access
+# Check sudo access
 sudo -l
 
-# 5. View sudo logs
+# View sudo logs
 grep sudo /var/log/auth.log | tail -10
 ```
 
@@ -579,115 +426,85 @@ systemctl list-unit-files --state=enabled
 # 2. List running services
 systemctl list-units --type=service --state=running
 
-# 3. Disable unnecessary services
-sudo systemctl disable telnet 2>/dev/null || echo "telnet not installed"
-sudo systemctl disable rsh 2>/dev/null || echo "rsh not installed"
-sudo systemctl disable rlogin 2>/dev/null || echo "rlogin not installed"
+# 3. Disable insecure services
+sudo systemctl disable telnet 2>/dev/null || echo "telnet not installed (good!)"
+sudo systemctl disable rsh 2>/dev/null || echo "rsh not installed (good!)"
+sudo systemctl disable rlogin 2>/dev/null || echo "rlogin not installed (good!)"
 
-# 4. Stop and disable if running
-sudo systemctl stop telnet 2>/dev/null || true
-sudo systemctl stop rsh 2>/dev/null || true
+# 4. Check for insecure services
+systemctl list-units --type=service | grep -E "(telnet|rsh|rlogin|ftp)"
 
-# 5. Check for insecure services
-systemctl list-units --type=service --state=running | grep -E "(telnet|rsh|rlogin|ftp)"
+# 5. Stop unnecessary services
+sudo systemctl stop bluetooth.service 2>/dev/null || true
+sudo systemctl disable bluetooth.service 2>/dev/null || true
 
-# 6. Secure SSH configuration (view only - don't modify)
-grep -E "^(PermitRootLogin|PasswordAuthentication|Port)" /etc/ssh/sshd_config 2>/dev/null || echo "SSH config not accessible"
+# 6. Secure SSH (view only - don't modify unless you know what you're doing)
+sudo cat /etc/ssh/sshd_config | grep -E "^(PermitRootLogin|PasswordAuthentication|Port)"
 ```
 
-### Hands-On: System Hardening
+### Hardening Checklist Script
 
 ```bash
-# 1. Create a hardening checklist script
-cat > ~/day16_test/scripts/hardening-check.sh << 'EOF'
+cat > ~/security-lab/scripts/hardening-checklist.sh << 'EOF'
 #!/bin/bash
 echo "=== SYSTEM HARDENING CHECKLIST ==="
 echo ""
 
-echo "1. Checking file permissions..."
-echo "World-writable files in /etc:"
-find /etc -type f -perm -002 2>/dev/null | head -5
-echo ""
+# File Permissions
+echo "✓ File Permission Checks:"
+echo "  World-writable files: $(find /etc /usr/bin -type f -perm -002 2>/dev/null | wc -l)"
+echo "  SUID files: $(find /usr/bin /usr/sbin -type f -perm -4000 2>/dev/null | wc -l)"
 
-echo "2. Checking SUID files..."
-echo "SUID files in /usr/bin:"
-find /usr/bin -type f -perm -4000 2>/dev/null | head -5
+# Services
 echo ""
+echo "✓ Service Checks:"
+echo "  Running services: $(systemctl list-units --type=service --state=running | grep -c "\.service")"
+echo "  Enabled services: $(systemctl list-unit-files --state=enabled | grep -c "\.service")"
 
-echo "3. Checking running services..."
-echo "Active services:"
-systemctl list-units --type=service --state=running | grep -v "systemd" | head -10
+# Network
 echo ""
+echo "✓ Network Checks:"
+echo "  Listening ports: $(ss -tuln | grep -c LISTEN)"
+echo "  Established connections: $(ss -tun state established | grep -c ESTAB)"
 
-echo "4. Checking listening ports..."
-echo "Listening ports:"
-ss -tuln | grep LISTEN | head -10
+# Firewall
 echo ""
-
-echo "5. Checking user accounts..."
-echo "User accounts:"
-cut -d: -f1,3 /etc/passwd | grep -E ":[0-9]{4}:" | head -5
-echo ""
-
-echo "6. Checking password aging..."
-if command -v chage >/dev/null; then
-    echo "Password aging for current user:"
-    chage -l $USER 2>/dev/null | head -5
+echo "✓ Firewall Status:"
+if command -v ufw >/dev/null; then
+    sudo ufw status | head -3
+elif command -v firewall-cmd >/dev/null; then
+    firewall-cmd --state 2>/dev/null || echo "  Firewalld not active"
 else
-    echo "chage command not available"
+    echo "  No firewall tool detected"
 fi
-echo ""
 
-echo "=== HARDENING CHECK COMPLETE ==="
+# Updates
+echo ""
+echo "✓ System Updates:"
+echo "  Kernel: $(uname -r)"
+if command -v apt >/dev/null; then
+    echo "  Updates available: $(apt list --upgradable 2>/dev/null | grep -c upgradable)"
+elif command -v yum >/dev/null; then
+    echo "  Updates available: $(yum check-update --quiet | grep -c "\..*")"
+fi
+
+echo ""
+echo "=== CHECKLIST COMPLETE ==="
 EOF
 
-chmod +x ~/day16_test/scripts/hardening-check.sh
-
-# 2. Run the hardening check
-~/day16_test/scripts/hardening-check.sh
-
-# 3. Secure our test files
-echo "Securing test files..."
-chmod 600 ~/day16_test/configs/*
-chmod 700 ~/day16_test/configs
-chmod 700 ~/day16_test/keys
-ls -la ~/day16_test/configs/
-
-# 4. Set secure umask
-echo "Current umask: $(umask)"
-umask 027
-echo "New umask: $(umask)"
-
-# 5. Test file creation with new umask
-touch ~/day16_test/test-file
-ls -la ~/day16_test/test-file
-rm ~/day16_test/test-file
-
-# 6. Check for unnecessary packages (example)
-echo "Checking for potentially unnecessary packages..."
-dpkg -l | grep -E "(telnet|rsh|ftp)" 2>/dev/null || echo "No insecure packages found"
+chmod +x ~/security-lab/scripts/hardening-checklist.sh
+~/security-lab/scripts/hardening-checklist.sh
 ```
 
 ---
 
-## Part 4: Intrusion Detection & Prevention
+## Part 4: Intrusion Detection with fail2ban
 
-### Command Reference: Security Monitoring
+### What is fail2ban?
 
-| Tool | Purpose | Installation | Key Commands |
-|------|---------|-------------|--------------|
-| **fail2ban** | Intrusion prevention | `apt install fail2ban` | `fail2ban-client status` |
-| **auditd** | System call auditing | `apt install auditd` | `auditctl -l` |
-| **rkhunter** | Rootkit detection | `apt install rkhunter` | `rkhunter --check` |
-| **chkrootkit** | Rootkit scanner | `apt install chkrootkit` | `chkrootkit` |
-| **lynis** | Security auditing | `apt install lynis` | `lynis audit system` |
+fail2ban monitors log files for malicious patterns (like repeated failed logins) and automatically bans offending IP addresses by adding firewall rules.
 
-### Fail2ban - Intrusion Prevention
-
-**What is Fail2ban?**
-Fail2ban monitors log files and automatically bans IP addresses that show malicious behavior (like repeated failed login attempts).
-
-**Fail2ban Configuration:**
+### fail2ban Installation & Configuration
 
 ```bash
 # 1. Install fail2ban (Ubuntu/Debian)
@@ -697,26 +514,28 @@ sudo apt install fail2ban -y
 # 2. Check status
 sudo systemctl status fail2ban
 
-# 3. View default configuration
-sudo cat /etc/fail2ban/jail.conf | head -20
-
-# 4. Create local configuration (don't edit jail.conf directly)
+# 3. Create local configuration (never edit jail.conf directly)
 sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 
-# 5. Basic jail.local configuration
+# 4. Configure SSH protection
 sudo tee /etc/fail2ban/jail.local << 'EOF'
 [DEFAULT]
-# Ban time in seconds (10 minutes)
-bantime = 600
+# Ban time in seconds (1 hour)
+bantime = 3600
 
-# Find time window in seconds (10 minutes)
+# Time window to count failures (10 minutes)
 findtime = 600
 
 # Number of failures before ban
 maxretry = 3
 
-# Ignore local IPs
+# Ignore local networks
 ignoreip = 127.0.0.1/8 ::1 192.168.1.0/24
+
+# Email notifications (optional)
+# destemail = admin@example.com
+# sendername = Fail2Ban
+# action = %(action_mwl)s
 
 [sshd]
 enabled = true
@@ -725,289 +544,325 @@ filter = sshd
 logpath = /var/log/auth.log
 maxretry = 3
 bantime = 3600
+findtime = 600
 EOF
 
-# 6. Restart fail2ban
+# 5. Restart fail2ban
 sudo systemctl restart fail2ban
 
-# 7. Check jail status
+# 6. Enable on boot
+sudo systemctl enable fail2ban
+
+# 7. Check status
 sudo fail2ban-client status
 sudo fail2ban-client status sshd
 ```
 
-**Fail2ban Commands:**
+### fail2ban Management Commands
 
 ```bash
-# Status commands
-fail2ban-client status                    # List active jails
-fail2ban-client status sshd              # SSH jail details
-fail2ban-client status apache-auth       # Apache jail details
+# Status and Information
+sudo fail2ban-client status                      # List all jails
+sudo fail2ban-client status sshd                # SSH jail details
+sudo fail2ban-client get sshd banned            # List banned IPs
 
-# Ban management
-fail2ban-client set sshd banip 192.168.1.100    # Manual ban
-fail2ban-client set sshd unbanip 192.168.1.100  # Manual unban
-fail2ban-client get sshd banned                  # List banned IPs
+# Manual Ban/Unban
+sudo fail2ban-client set sshd banip 10.0.0.50   # Manually ban IP
+sudo fail2ban-client set sshd unbanip 10.0.0.50 # Unban IP
 
 # Configuration
-fail2ban-client get sshd maxretry        # Get max retry count
-fail2ban-client set sshd maxretry 5      # Set max retry count
+sudo fail2ban-client get sshd maxretry          # Get max retry
+sudo fail2ban-client set sshd maxretry 5        # Set max retry
+
+# Logs
+sudo tail -f /var/log/fail2ban.log              # Monitor fail2ban log
+sudo journalctl -u fail2ban -f                  # Systemd journal
 ```
 
-### Log Analysis for Security
-
-**Important Security Logs:**
-
-| Log File | Purpose | Key Patterns |
-|----------|---------|--------------|
-| `/var/log/auth.log` | Authentication events | Failed password, sudo usage |
-| `/var/log/syslog` | System messages | Service failures, errors |
-| `/var/log/secure` | Security events (RHEL) | SSH, sudo, authentication |
-| `/var/log/messages` | General system (RHEL) | System events, errors |
-| `/var/log/apache2/access.log` | Web access | HTTP requests, IPs |
-| `/var/log/nginx/access.log` | Nginx access | HTTP requests, status codes |
-
-**Security Log Analysis Commands:**
+### Additional fail2ban Jails
 
 ```bash
-# 1. Failed SSH login attempts
-grep "Failed password" /var/log/auth.log 2>/dev/null | tail -10
+# Add Apache/Nginx protection
+sudo tee -a /etc/fail2ban/jail.local << 'EOF'
 
-# 2. Successful SSH logins
-grep "Accepted password" /var/log/auth.log 2>/dev/null | tail -10
+[apache-auth]
+enabled = true
+port = http,https
+filter = apache-auth
+logpath = /var/log/apache2/error.log
+maxretry = 3
 
-# 3. Sudo usage
-grep "sudo:" /var/log/auth.log 2>/dev/null | tail -10
-
-# 4. Root login attempts
-grep "root" /var/log/auth.log 2>/dev/null | grep -i "failed" | tail -5
-
-# 5. Analyze IP addresses from failed logins
-grep "Failed password" /var/log/auth.log 2>/dev/null | awk '{print $11}' | sort | uniq -c | sort -rn | head -10
-
-# 6. Check for privilege escalation attempts
-grep -i "su:" /var/log/auth.log 2>/dev/null | tail -10
-
-# 7. Monitor real-time authentication events
-sudo tail -f /var/log/auth.log | grep --line-buffered -E "(Failed|Accepted|sudo)"
-```
-
-### Hands-On: Security Monitoring
-
-```bash
-# 1. Create a security monitoring script
-cat > ~/day16_test/scripts/security-monitor.sh << 'EOF'
-#!/bin/bash
-echo "=== SECURITY MONITORING REPORT ==="
-echo "Generated at: $(date)"
-echo ""
-
-echo "1. FAILED LOGIN ATTEMPTS (Last 10):"
-grep "Failed password" /var/log/auth.log 2>/dev/null | tail -10 | awk '{print $1, $2, $3, $11}' || echo "No auth.log available"
-echo ""
-
-echo "2. TOP ATTACKING IPs:"
-grep "Failed password" /var/log/auth.log 2>/dev/null | awk '{print $11}' | sort | uniq -c | sort -rn | head -5 || echo "No failed attempts found"
-echo ""
-
-echo "3. SUCCESSFUL LOGINS (Last 5):"
-grep "Accepted password" /var/log/auth.log 2>/dev/null | tail -5 | awk '{print $1, $2, $3, $9, $11}' || echo "No successful logins found"
-echo ""
-
-echo "4. SUDO USAGE (Last 5):"
-grep "sudo:" /var/log/auth.log 2>/dev/null | tail -5 | awk '{print $1, $2, $3, $5, $6}' || echo "No sudo usage found"
-echo ""
-
-echo "5. LISTENING PORTS:"
-ss -tuln | grep LISTEN | head -10
-echo ""
-
-echo "6. ACTIVE CONNECTIONS:"
-ss -tun state established | head -10
-echo ""
-
-echo "7. SYSTEM LOAD:"
-uptime
-echo ""
-
-echo "=== END REPORT ==="
+[nginx-http-auth]
+enabled = true
+port = http,https
+filter = nginx-http-auth
+logpath = /var/log/nginx/error.log
+maxretry = 3
 EOF
 
-chmod +x ~/day16_test/scripts/security-monitor.sh
-
-# 2. Run security monitoring
-~/day16_test/scripts/security-monitor.sh
-
-# 3. Simulate some log analysis with our test logs
-echo "Analyzing test access logs..."
-echo "Top IPs in access log:"
-awk '{print $1}' ~/day16_test/logs/access.log | sort | uniq -c | sort -rn
-
-echo "HTTP status codes:"
-awk '{print $9}' ~/day16_test/logs/access.log | sort | uniq -c | sort -rn
-
-echo "Failed requests (4xx, 5xx):"
-awk '$9 >= 400 {print $1, $7, $9}' ~/day16_test/logs/access.log
-
-# 4. Create a simple intrusion detection script
-cat > ~/day16_test/scripts/simple-ids.sh << 'EOF'
-#!/bin/bash
-# Simple Intrusion Detection Script
-
-THRESHOLD=5
-LOGFILE="/var/log/auth.log"
-ALERT_FILE="~/day16_test/logs/security-alerts.log"
-
-echo "Checking for brute force attacks..."
-
-if [ -f "$LOGFILE" ]; then
-    # Check for IPs with more than THRESHOLD failed attempts
-    grep "Failed password" "$LOGFILE" | awk '{print $11}' | sort | uniq -c | while read count ip; do
-        if [ "$count" -gt "$THRESHOLD" ]; then
-            echo "$(date): ALERT - IP $ip has $count failed login attempts" | tee -a "$ALERT_FILE"
-        fi
-    done
-else
-    echo "Auth log not available for analysis"
-fi
-
-echo "IDS check complete"
-EOF
-
-chmod +x ~/day16_test/scripts/simple-ids.sh
-
-# 5. Run the simple IDS
-~/day16_test/scripts/simple-ids.sh
+sudo systemctl restart fail2ban
 ```
 
 ---
 
-## Part 5: Encryption & Secure Communication
+## Part 5: Security Monitoring & Log Analysis
 
-### Command Reference: Encryption Tools
+### Important Security Logs
 
-| Tool | Purpose | Common Usage |
-|------|---------|--------------|
-| **gpg** | File encryption/signing | `gpg -c file.txt` |
-| **openssl** | SSL/TLS operations | `openssl enc -aes256 -in file -out file.enc` |
-| **ssh-keygen** | SSH key generation | `ssh-keygen -t rsa -b 4096` |
-| **age** | Modern encryption | `age -r recipient file.txt` |
+| Log File | Purpose | Key Events |
+|----------|---------|------------|
+| `/var/log/auth.log` | Authentication (Debian/Ubuntu) | SSH, sudo, user logins |
+| `/var/log/secure` | Authentication (RHEL/CentOS) | SSH, sudo, user logins |
+| `/var/log/syslog` | System messages | Service events, errors |
+| `/var/log/kern.log` | Kernel messages | Hardware, driver events |
+| `/var/log/fail2ban.log` | fail2ban activity | Bans, unbans |
+| `/var/log/ufw.log` | Firewall events | Blocked connections |
 
-### GPG Encryption
-
-**GPG (GNU Privacy Guard) Basics:**
+### Essential Log Analysis Commands
 
 ```bash
-# 1. Generate GPG key pair
+# SSH Login Analysis
+grep "Accepted password" /var/log/auth.log | tail -10              # Successful logins
+grep "Failed password" /var/log/auth.log | tail -10                # Failed attempts
+grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn  # Top attacking IPs
+
+# Sudo Usage
+grep "sudo:" /var/log/auth.log | tail -10                          # Sudo commands
+grep "sudo:" /var/log/auth.log | grep "COMMAND" | tail -5          # Recent sudo commands
+
+# User Account Changes
+grep "useradd\|userdel\|usermod" /var/log/auth.log | tail -10     # User modifications
+grep "passwd" /var/log/auth.log | tail -10                         # Password changes
+
+# Root Login Attempts
+grep "root" /var/log/auth.log | grep "Failed" | tail -10          # Failed root logins
+
+# Real-time Monitoring
+sudo tail -f /var/log/auth.log                                     # Live authentication log
+sudo tail -f /var/log/auth.log | grep --line-buffered "Failed"   # Live failed attempts
+
+# Systemd Journal (Alternative)
+journalctl -u ssh --since "1 hour ago"                            # SSH logs last hour
+journalctl -p err -n 50                                           # Last 50 errors
+journalctl -f                                                     # Follow journal
+```
+
+### Security Monitoring Script
+
+```bash
+cat > ~/security-lab/scripts/monitor-security.sh << 'EOF'
+#!/bin/bash
+echo "=== SECURITY MONITORING REPORT ==="
+echo "Report Time: $(date)"
+echo ""
+
+# Failed Login Attempts
+echo "1. FAILED LOGIN ATTEMPTS (Last 10):"
+if [ -f /var/log/auth.log ]; then
+    grep "Failed password" /var/log/auth.log | tail -10 | awk '{print $1, $2, $3, $9, $11}' || echo "   No failed attempts"
+else
+    echo "   Auth log not available"
+fi
+echo ""
+
+# Top Attacking IPs
+echo "2. TOP ATTACKING IPs:"
+if [ -f /var/log/auth.log ]; then
+    grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn | head -5 || echo "   No attacks detected"
+else
+    echo "   Auth log not available"
+fi
+echo ""
+
+# Successful Logins
+echo "3. SUCCESSFUL LOGINS (Last 5):"
+if [ -f /var/log/auth.log ]; then
+    grep "Accepted password" /var/log/auth.log | tail -5 | awk '{print $1, $2, $3, $9, "from", $11}' || echo "   No successful logins"
+else
+    echo "   Auth log not available"
+fi
+echo ""
+
+# Sudo Usage
+echo "4. SUDO USAGE (Last 5):"
+if [ -f /var/log/auth.log ]; then
+    grep "sudo:" /var/log/auth.log | grep "COMMAND" | tail -5 | awk '{print $1, $2, $5, $6}' || echo "   No sudo usage"
+else
+    echo "   Auth log not available"
+fi
+echo ""
+
+# Current Connections
+echo "5. ACTIVE SSH CONNECTIONS:"
+who | grep -v "^$" || echo "   No active connections"
+echo ""
+
+# fail2ban Status
+echo "6. FAIL2BAN STATUS:"
+if command -v fail2ban-client >/dev/null 2>&1; then
+    sudo fail2ban-client status sshd 2>/dev/null || echo "   fail2ban not running"
+else
+    echo "   fail2ban not installed"
+fi
+echo ""
+
+echo "=== REPORT COMPLETE ==="
+EOF
+
+chmod +x ~/security-lab/scripts/monitor-security.sh
+~/security-lab/scripts/monitor-security.sh
+```
+
+---
+
+## Part 6: Encryption & Secure Data
+
+### GPG (GNU Privacy Guard)
+
+**File Encryption:**
+
+```bash
+# 1. Symmetric encryption (password-based)
+gpg -c ~/security-lab/configs/app.conf
+# Enter passphrase when prompted
+# Creates app.conf.gpg
+
+# 2. Decrypt file
+gpg -d ~/security-lab/configs/app.conf.gpg
+# Or decrypt to file:
+gpg -o decrypted.conf -d ~/security-lab/configs/app.conf.gpg
+
+# 3. Generate key pair (for asymmetric encryption)
 gpg --gen-key
 # Follow prompts: name, email, passphrase
 
-# 2. List keys
-gpg --list-keys
-gpg --list-secret-keys
+# 4. List keys
+gpg --list-keys                    # Public keys
+gpg --list-secret-keys            # Private keys
 
-# 3. Encrypt file with passphrase (symmetric)
-gpg -c ~/day16_test/sensitive.txt
-# Creates sensitive.txt.gpg
+# 5. Encrypt for specific recipient
+gpg -e -r "email@example.com" file.txt
 
-# 4. Decrypt file
-gpg ~/day16_test/sensitive.txt.gpg
-# Enter passphrase
+# 6. Encrypt and sign
+gpg -se -r "email@example.com" file.txt
 
-# 5. Encrypt for specific recipient (asymmetric)
-gpg -e -r "recipient@example.com" ~/day16_test/sensitive.txt
+# 7. Decrypt
+gpg -d file.txt.gpg
+```
 
-# 6. Sign file
-gpg --sign ~/day16_test/sensitive.txt
+**Encrypted Backups:**
 
-# 7. Verify signature
-gpg --verify ~/day16_test/sensitive.txt.gpg
+```bash
+# Create encrypted backup
+tar czf - ~/security-lab/configs/ | gpg -c > ~/security-lab/backups/configs-backup.tar.gz.gpg
+
+# Restore encrypted backup
+gpg -d ~/security-lab/backups/configs-backup.tar.gz.gpg | tar xzf - -C /tmp/
 ```
 
 ### SSH Key Authentication
 
-**SSH Key Management:**
+**Generate and Use SSH Keys:**
 
 ```bash
-# 1. Generate SSH key pair
-ssh-keygen -t rsa -b 4096 -f ~/day16_test/keys/test_key -C "test@example.com"
-# Don't use passphrase for testing (press Enter)
+# 1. Generate SSH key pair (4096-bit RSA)
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_secure -C "your_email@example.com"
+# Enter strong passphrase
 
-# 2. View public key
-cat ~/day16_test/keys/test_key.pub
+# 2. Generate ED25519 key (modern, recommended)
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -C "your_email@example.com"
 
-# 3. View private key (be careful!)
-head -5 ~/day16_test/keys/test_key
+# 3. View public key
+cat ~/.ssh/id_rsa_secure.pub
 
-# 4. Set correct permissions
-chmod 600 ~/day16_test/keys/test_key
-chmod 644 ~/day16_test/keys/test_key.pub
+# 4. Copy public key to server
+ssh-copy-id -i ~/.ssh/id_rsa_secure.pub user@server
 
-# 5. Copy public key to authorized_keys (for testing)
-mkdir -p ~/.ssh
-cat ~/day16_test/keys/test_key.pub >> ~/.ssh/authorized_keys
+# 5. Manual copy (if ssh-copy-id not available)
+cat ~/.ssh/id_rsa_secure.pub | ssh user@server 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
+
+# 6. Set correct permissions
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_rsa_secure
+chmod 644 ~/.ssh/id_rsa_secure.pub
 chmod 600 ~/.ssh/authorized_keys
 
-# 6. Test SSH key authentication
-ssh -i ~/day16_test/keys/test_key localhost whoami
+# 7. Test SSH key authentication
+ssh -i ~/.ssh/id_rsa_secure user@server
+
+# 8. Configure SSH client (~/.ssh/config)
+cat >> ~/.ssh/config << 'EOF'
+Host myserver
+    HostName server.example.com
+    User username
+    Port 22
+    IdentityFile ~/.ssh/id_rsa_secure
+EOF
+
+# 9. Disable password authentication (on server /etc/ssh/sshd_config)
+# PasswordAuthentication no
+# PubkeyAuthentication yes
+# Then: sudo systemctl restart sshd
 ```
 
-### File Encryption Examples
+### OpenSSL Encryption
 
 ```bash
-# 1. Encrypt sensitive configuration
-echo "database_password=super_secret_123" > ~/day16_test/configs/db.conf
-gpg -c ~/day16_test/configs/db.conf
-rm ~/day16_test/configs/db.conf  # Remove plaintext
-ls -la ~/day16_test/configs/
+# Encrypt file with AES-256
+openssl enc -aes-256-cbc -salt -in file.txt -out file.enc
+# Enter password
 
-# 2. Decrypt when needed
-gpg -d ~/day16_test/configs/db.conf.gpg
+# Decrypt file
+openssl enc -aes-256-cbc -d -in file.enc -out file.txt
 
-# 3. OpenSSL encryption (alternative)
-echo "api_key=sk-1234567890abcdef" | openssl enc -aes256 -base64 -out ~/day16_test/configs/api.enc
-# Enter password when prompted
+# Encrypt with base64 encoding
+echo "secret data" | openssl enc -aes-256-cbc -a -salt -out secret.enc
 
-# 4. OpenSSL decryption
-openssl enc -aes256 -d -base64 -in ~/day16_test/configs/api.enc
-
-# 5. Create encrypted backup
-tar -czf - ~/day16_test/configs/ | gpg -c > ~/day16_test/backups/configs-encrypted.tar.gz.gpg
-
-# 6. Restore encrypted backup
-gpg -d ~/day16_test/backups/configs-encrypted.tar.gz.gpg | tar -xzf - -C /tmp/
-ls -la /tmp/home/*/day16_test/configs/ 2>/dev/null || echo "Backup test complete"
+# Decrypt base64
+openssl enc -aes-256-cbc -d -a -in secret.enc
 ```
 
 ---
 
-## Sample Exercises
+## Practical Exercises
 
-### Exercise 1: Configure Basic Firewall
-**Task:** Set up UFW to allow only SSH, HTTP, and HTTPS traffic, blocking everything else.
+### Exercise 1: Complete Firewall Setup
 
-**Solution:**
+**Task:** Configure UFW to secure a web server allowing only necessary ports.
+
 ```bash
-# 1. Check current status
-sudo ufw status
+# 1. Reset UFW to start fresh
+sudo ufw --force reset
 
 # 2. Set default policies
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
-# 3. Allow essential services
-sudo ufw allow ssh
-sudo ufw allow http
-sudo ufw allow https
+# 3. Allow SSH (with rate limiting)
+sudo ufw limit ssh comment 'SSH with rate limiting'
 
-# 4. Enable firewall
+# 4. Allow HTTP and HTTPS
+sudo ufw allow http comment 'HTTP traffic'
+sudo ufw allow https comment 'HTTPS traffic'
+
+# 5. Allow from internal network to database
+sudo ufw allow from 192.168.1.0/24 to any port 3306 comment 'MySQL from internal network'
+
+# 6. Enable logging
+sudo ufw logging medium
+
+# 7. Enable firewall
 sudo ufw enable
 
-# 5. Verify configuration
+# 8. Verify configuration
 sudo ufw status verbose
-
-# 6. Test rules
 sudo ufw status numbered
+
+# 9. Test (in another terminal)
+# curl http://localhost
+# telnet localhost 23  # Should fail
 ```
+
 
 ### Exercise 2: Implement Password Policies
 **Task:** Configure password aging and complexity requirements for user accounts.
