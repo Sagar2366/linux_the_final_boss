@@ -1544,4 +1544,4 @@ sudo systemd-resolve --flush-caches
 ---
 
 ## Next Steps
-**Move to Day 16 when ready!**
+Proceed to [Day 16: Security, Firewalls & Hardening](../Day_16/notes_and_exercises.md) to learn security, firewalls and hardening.

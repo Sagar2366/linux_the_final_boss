@@ -346,3 +346,6 @@ You are now ready for:
 - Discord: https://discord.gg/mNDm39qB8t
 - Google Group: https://groups.google.com/forum/#!forum/daily-devops-sre-challenge-series/join
 - YouTube: https://www.youtube.com/@Sagar.Utekar
+
+## Next Steps
+Proceed to [Day 27: Linux Performance Tuning & Optimization](../Day_27/notes_and_exercises.md) for linux performance tuning and optimization.
