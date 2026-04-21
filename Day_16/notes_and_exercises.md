@@ -455,15 +455,15 @@ System hardening is the process of reducing an operating system or application's
 ```
 -rwxrw-r--  1 user group 1234 Oct 16 10:00 filename
  ↓↓↓↓↓↓↓↓↓
- ||||||||└─ Other permissions (read)
+ ||||||||└─ Other permissions (execute) - MISSING
  |||||||└── Other permissions (write) - MISSING
- ||||||└─── Other permissions (execute) - MISSING
- |||||└──── Group permissions (read)
+ ||||||└─── Other permissions (read)
+ |||||└──── Group permissions (execute) - MISSING
  ||||└───── Group permissions (write)
- |||└────── Group permissions (execute) - MISSING
- ||└─────── Owner permissions (read)
+ |||└────── Group permissions (read)
+ ||└─────── Owner permissions (execute)
  |└──────── Owner permissions (write)
- └───────── Owner permissions (execute)
+ └───────── Owner permissions (read)
 ```
 
 **Permission Values:**
