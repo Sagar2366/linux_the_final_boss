@@ -472,7 +472,7 @@ source ~/.bashrc
 | Command | Purpose | Example |
 |---------|---------|---------|
 | `at TIME` | Schedule job (interactive) | `at 14:30` then enter commands, Ctrl+D |
-| `echo "cmd" | at TIME` | Schedule job (piped) | `echo "~/script.sh" | at now + 10 min` |
+| `echo "cmd" \| at TIME` | Schedule job (piped) | `echo "~/script.sh" \| at now + 10 min` |
 | `atq` | List queued jobs | Shows job#, time, queue, user |
 | `atrm JOB#` | Remove job | `atrm 3` (cancels job 3) |
 | `at -c JOB#` | View job details | `at -c 3` (shows full command & env) |
@@ -1145,14 +1145,14 @@ sudo cat /var/spool/anacron/daily-maintenance
 | | `sudo crontab -u USER -e` | Edit another user's crontab |
 | | `sudo crontab -u USER -l` | List another user's cron jobs |
 | **At Scheduling** | `at TIME` | Schedule job at specific time (interactive) |
-| | `echo "cmd" | at TIME` | Schedule job (piped) |
+| | `echo "cmd" \| at TIME` | Schedule job (piped) |
 | | `atq` | List queued at jobs |
 | | `atrm JOB#` | Remove at job by number |
 | | `at -c JOB#` | View job details and environment |
 | | `batch` | Run when system load is low |
 | **Process Viewing** | `ps aux` | List all processes (detailed) |
 | | `ps -ef` | List with parent PID (tree-like) |
-| | `ps aux | grep NAME` | Find process by name |
+| | `ps aux \| grep NAME` | Find process by name |
 | | `pgrep NAME` | Get PID by name |
 | | `pgrep -f PATTERN` | Get PID by full command pattern |
 | | `top` | Live process monitor (q=quit, k=kill) |
