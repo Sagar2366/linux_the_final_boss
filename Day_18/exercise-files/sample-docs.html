@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Documentation - Day 18</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 25px;
+        }
+        .info-box {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+        }
+        .server-info {
+            background-color: #e8f5e8;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Day 18: Web Server Configuration</h1>
+
+        <div class="info-box">
+            <strong>Exercise:</strong> This is a sample static HTML page for testing Apache virtual hosts and Nginx server blocks.
+        </div>
+
+        <h2>Web Server Information</h2>
+        <div class="server-info">
+            <p><strong>Page served at:</strong> <span id="datetime"></span></p>
+            <p><strong>File location:</strong> <code>/var/www/html/sample-docs.html</code></p>
+            <p><strong>Purpose:</strong> Apache Virtual Host Testing</p>
+        </div>
+
+        <h2>Configuration Steps Completed</h2>
+        <ol>
+            <li>Web server installed and configured</li>
+            <li>Virtual host/server block created</li>
+            <li>Static content deployed</li>
+            <li>Permissions set correctly</li>
+        </ol>
+
+        <h2>Next Steps</h2>
+        <ul>
+            <li>Test reverse proxy configuration</li>
+            <li>Configure SSL/HTTPS with Let's Encrypt</li>
+            <li>Set up monitoring and logging</li>
+            <li>Implement security headers</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>Note:</strong> This page demonstrates that your web server is correctly serving static content.
+            You can now proceed with more advanced configurations like reverse proxies and SSL termination.
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('datetime').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>

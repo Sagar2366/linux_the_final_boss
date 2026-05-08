@@ -1,0 +1,19 @@
+{
+  "name": "day18-sample-app",
+  "version": "1.0.0",
+  "description": "Sample Node.js application for Day 18 web server exercises",
+  "main": "sample-app.js",
+  "scripts": {
+    "start": "node sample-app.js",
+    "dev": "nodemon sample-app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["linux", "web-server", "nginx", "apache", "reverse-proxy"],
+  "author": "Linux DevOps Course",
+  "license": "MIT"
+}

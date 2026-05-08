@@ -248,7 +248,7 @@ Choose tools that scale efficiently.
 |------|---------|-------|
 | Fast literal search | `grep -F pattern file` | Skips regex engine |
 | Filter huge trees | `find ... -maxdepth N` | Limits traversal |
-| Real-time filtering | `tail -f file | grep --line-buffered PATTERN` | Streams matches |
+| Real-time filtering | `tail -f file \| grep --line-buffered PATTERN` | Streams matches |
 | Count occurrences | `grep -c pattern file` | Built-in tally |
 | Large file paging | `less file` | Streams content |
 | Batch operations | `xargs -r -n` | Fewer forks |
@@ -448,7 +448,7 @@ diff -u config_old.conf config_new.conf
 | `grep -i pattern file` | Case-insensitive search | Log analysis |
 | `grep -rn pattern dir` | Recursive with line numbers | Code search |
 | `grep -v pattern file` | Exclude matches | Noise reduction |
-| `grep -E 'a|b'` | Extended regex | Alternation |
+| `grep -E 'a\|b'` | Extended regex | Alternation |
 | `grep -F text file` | Fixed string | Fast path |
 | `find . -name "*.log"` | Match by filename | Glob-style |
 | `find . -type f -size +50M` | Large files | Disk triage |
@@ -489,14 +489,14 @@ diff -u config_old.conf config_new.conf
 ### Quick Wins & One-Liners
 | Command(s) | Purpose | Notes |
 |------------|---------|-------|
-| `awk '{print $1}' access.log | sort | uniq -c | sort -nr | head` | Top IPs | Log triage |
+| `awk '{print $1}' access.log \| sort \| uniq -c \| sort -nr \| head` | Top IPs | Log triage |
 | `find . -type f -size +50M -exec ls -lh {} \;` | Large files | Human sizes |
-| `history | tail -5` | Recent commands | Audit |
-| `cut -d: -f1 /etc/passwd | head` | Usernames list | Account parsing |
-| `du -sh * | sort -hr | head` | Largest dirs | Disk usage |
-| `tail -f log | grep --line-buffered ERROR` | Live error view | Real-time filter |
+| `history \| tail -5` | Recent commands | Audit |
+| `cut -d: -f1 /etc/passwd \| head` | Usernames list | Account parsing |
+| `du -sh * \| sort -hr \| head` | Largest dirs | Disk usage |
+| `tail -f log \| grep --line-buffered ERROR` | Live error view | Real-time filter |
 | `grep -R "TODO" . --exclude-dir=.git` | Code search | Recursively |
-| `tr -cs '[:alnum:]' '\n' < file | sort | uniq -c | sort -nr | head` | Word frequency | Basic analysis |
+| `tr -cs '[:alnum:]' '\n' < file \| sort \| uniq -c \| sort -nr \| head` | Word frequency | Basic analysis |
 
 ---
 
