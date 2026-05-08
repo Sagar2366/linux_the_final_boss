@@ -1,5 +1,48 @@
 # Day 26: Mega Project – End-to-End DevOps/Linux Challenge
 
+## Table of Contents
+
+- [Day 26: Mega Project – End-to-End DevOps/Linux Challenge](#day-26-mega-project-–-end-to-end-devopslinux-challenge)
+  - [Learning Objectives](#learning-objectives)
+  - [Project Overview](#project-overview)
+  - [Scenario](#scenario)
+  - [Technical Requirements](#technical-requirements)
+  - [Project Phases](#project-phases)
+    - [Phase 1: Infrastructure Setup (2 hours)](#phase-1-infrastructure-setup-2-hours)
+    - [Phase 2: User Management & Security (1.5 hours)](#phase-2-user-management-&-security-1.5-hours)
+    - [Phase 3: Web Services Deployment (2 hours)](#phase-3-web-services-deployment-2-hours)
+    - [Phase 4: Security Hardening (1.5 hours)](#phase-4-security-hardening-1.5-hours)
+    - [Phase 5: Automation & Monitoring (2 hours)](#phase-5-automation-&-monitoring-2-hours)
+    - [Phase 6: Documentation & Testing (1 hour)](#phase-6-documentation-&-testing-1-hour)
+  - [Implementation Guide](#implementation-guide)
+    - [Sample Project Structure](#sample-project-structure)
+    - [Key Script Examples](#key-script-examples)
+- [!/bin/bash](#!binbash)
+- [scripts/setup/initial-setup.sh](#scriptssetupinitial-setup.sh)
+- [Update system](#update-system)
+- [Set hostname](#set-hostname)
+- [Install essential packages](#install-essential-packages)
+- [!/bin/bash](#!binbash)
+- [scripts/backup/backup.sh](#scriptsbackupbackup.sh)
+- [Create backup directory](#create-backup-directory)
+- [Backup web content](#backup-web-content)
+- [Backup configurations](#backup-configurations)
+- [Log backup completion](#log-backup-completion)
+  - [Validation Checklist](#validation-checklist)
+    - [Security Validation](#security-validation)
+    - [Functionality Validation](#functionality-validation)
+    - [Documentation Validation](#documentation-validation)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Success Criteria](#success-criteria)
+    - [Technical Excellence](#technical-excellence)
+    - [Documentation Quality](#documentation-quality)
+    - [Professional Presentation](#professional-presentation)
+  - [Bonus Challenges](#bonus-challenges)
+    - [Advanced Features (Optional)](#advanced-features-optional)
+    - [Performance Optimization](#performance-optimization)
+  - [Project Completion](#project-completion)
+
+
 ## Learning Objectives
 By the end of Day 26, you will:
 - Apply all Linux skills learned throughout the curriculum

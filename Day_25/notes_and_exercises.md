@@ -1,5 +1,26 @@
 # Day 25: System Hardening
 
+## Table of Contents
+
+- [Day 25: System Hardening](#day-25-system-hardening)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Why System Hardening Matters](#why-system-hardening-matters)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [Service hardening](#service-hardening)
+- [Network security](#network-security)
+- [File security](#file-security)
+- [Monitoring](#monitoring)
+  - [Security Frameworks](#security-frameworks)
+  - [Best Practices](#best-practices)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 25, you will:
 - Implement comprehensive system hardening measures

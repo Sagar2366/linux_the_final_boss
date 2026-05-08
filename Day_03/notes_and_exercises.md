@@ -1,5 +1,39 @@
 # Day 03: Linux Folder Structure & File Types
 
+## Table of Contents
+
+- [Day 03: Linux Folder Structure & File Types](#day-03-linux-folder-structure-&-file-types)
+  - [Learning Objectives](#learning-objectives)
+  - [What is the Linux Filesystem Hierarchy?](#what-is-the-linux-filesystem-hierarchy)
+      - [User Data & Home](#user-data-&-home)
+      - [Variable & Temporary Data](#variable-&-temporary-data)
+      - [Additional Software & User Programs](#additional-software-&-user-programs)
+      - [Mount Points](#mount-points)
+  - [File Types in Linux:](#file-types-in-linux)
+    - [Common Types -](#common-types--)
+  - [Navigating: Paths & Hidden Files](#navigating-paths-&-hidden-files)
+  - [Symbolic vs. Hard Links: The Twin Files](#symbolic-vs.-hard-links-the-twin-files)
+  - [Hands-on Exercises & Lab](#hands-on-exercises-&-lab)
+    - [Part 1: Root Hierarchy & Purposes](#part-1-root-hierarchy-&-purposes)
+    - [Part 2: Visualize Structure & Hidden Files](#part-2-visualize-structure-&-hidden-files)
+    - [Part 3: File Types & Inspection](#part-3-file-types-&-inspection)
+    - [Part 4: Links Creation & Differences](#part-4-links-creation-&-differences)
+    - [Part 5: Paths, Navigation, & Hunt](#part-5-paths-navigation-&-hunt)
+    - [Part 6: Challenge - Full Workflow](#part-6-challenge---full-workflow)
+    - [Solutions](#solutions)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [Navigation](#navigation)
+- [File types](#file-types)
+- [Links](#links)
+  - [Next Steps](#next-steps)
+  - [Troubleshooting (Optional)](#troubleshooting-optional)
+    - [Permission Denied](#permission-denied)
+    - [Broken Symlink](#broken-symlink)
+    - [No tree Command](#no-tree-command)
+    - [Inode Full (or Disk Space Issues)](#inode-full-or-disk-space-issues)
+
+
 ## Learning Objectives
 By the end of Day 3, you will:
 - Understand the Linux filesystem hierarchy (FHS)

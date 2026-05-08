@@ -1,5 +1,21 @@
 # Day 12: Compression, Archiving, and Backups
 
+## Table of Contents
+
+- [Day 12: Compression, Archiving, and Backups](#day-12-compression-archiving-and-backups)
+  - [Learning Objectives](#learning-objectives)
+  - [Sample Environment Setup](#sample-environment-setup)
+- [View initial state](#view-initial-state)
+  - [Why These Tools Matter:](#why-these-tools-matter)
+    - [Advanced tar:](#advanced-tar)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 12, you will:
 - Master compression and archiving tools

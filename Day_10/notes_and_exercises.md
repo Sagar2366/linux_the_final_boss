@@ -1,5 +1,21 @@
 # Day 10: Environment Variables, Aliases & Shell Customization
 
+## Table of Contents
+
+- [Day 10: Environment Variables, Aliases & Shell Customization](#day-10-environment-variables-aliases-&-shell-customization)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+    - [Top Shell Customization Commands](#top-shell-customization-commands)
+    - [Environment Variables](#environment-variables)
+    - [Aliases](#aliases)
+    - [Shell Functions](#shell-functions)
+  - [Sample Exercises](#sample-exercises)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 10, you will:
 - Understand and manage environment variables

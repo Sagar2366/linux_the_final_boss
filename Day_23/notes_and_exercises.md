@@ -1,5 +1,20 @@
 # Day 23: Linux Interview Questions & Real-World Scenarios
 
+## Table of Contents
+
+- [Day 23: Linux Interview Questions & Real-World Scenarios](#day-23-linux-interview-questions-&-real-world-scenarios)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Interview Tips](#interview-tips)
+  - [Real-World Scenarios](#real-world-scenarios)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 23, you will:
 - Prepare for Linux system administration interviews

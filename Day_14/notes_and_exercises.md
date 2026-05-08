@@ -1,5 +1,22 @@
 # Day 14: System Monitoring & Log Management
 
+## Table of Contents
+
+- [Day 14: System Monitoring & Log Management](#day-14-system-monitoring-&-log-management)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [System monitoring](#system-monitoring)
+- [Log management](#log-management)
+  - [Best Practices](#best-practices)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 14, you will:
 - Monitor system resources (CPU, memory, disk, network) in real-time

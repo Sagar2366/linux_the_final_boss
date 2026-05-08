@@ -1,3 +1,19 @@
+
+
+## Table of Contents
+
+  - [Detailed Phase Explanations (Optional)](#detailed-phase-explanations-optional)
+    - [1. Power & Reset Vector](#1.-power-&-reset-vector)
+    - [2. Firmware (BIOS vs UEFI)](#2.-firmware-bios-vs-uefi)
+    - [3. Disk Structure & Loader Entry](#3.-disk-structure-&-loader-entry)
+    - [4. GRUB2 Bootloader](#4.-grub2-bootloader)
+    - [5. Kernel Load & Decompression](#5.-kernel-load-&-decompression)
+    - [6. Initramfs (Early User Space)](#6.-initramfs-early-user-space)
+    - [7. Switch Root](#7.-switch-root)
+    - [8. PID 1 (systemd)](#8.-pid-1-systemd)
+    - [9. Services & Targets](#9.-services-&-targets)
+    - [10. User Interaction](#10.-user-interaction)
+
 - **What is the Linux Boot Process?**
   - The boot process is the sequence of steps the system takes to start up and become ready for use.
   - Understanding the boot process is crucial for troubleshooting startup issues and managing services.

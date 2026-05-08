@@ -1,5 +1,24 @@
 # Day 20: Basic Shell Scripting
 
+## Table of Contents
+
+- [Day 20: Basic Shell Scripting](#day-20-basic-shell-scripting)
+  - [Learning Objectives](#learning-objectives)
+  - [Notes](#notes)
+  - [Why Shell Scripting Matters](#why-shell-scripting-matters)
+  - [Sample Exercises](#sample-exercises)
+  - [Solutions](#solutions)
+  - [Sample Interview Questions](#sample-interview-questions)
+  - [Interview Question Answers](#interview-question-answers)
+  - [Completion Checklist](#completion-checklist)
+  - [Key Commands Summary](#key-commands-summary)
+- [Script basics](#script-basics)
+- [Variables and input](#variables-and-input)
+- [Conditionals](#conditionals)
+- [Loops](#loops)
+  - [Next Steps](#next-steps)
+
+
 ## Learning Objectives
 By the end of Day 20, you will:
 - Write basic shell scripts for automation
