@@ -1304,4 +1304,5 @@ ls -lh ~/backups/
 6. Prevent overlap with flock or process checks
 7. Troubleshoot with logs, manual testing, and environment debugging
 
-**Move to Day 14 when ready!** 🚀
+## Next Steps
+Proceed to [Day 14: System Monitoring & Log Management](../Day_14/notes_and_exercises.md) to learn system monitoring and log management.
