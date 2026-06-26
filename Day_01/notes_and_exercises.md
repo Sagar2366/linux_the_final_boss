@@ -469,4 +469,4 @@ Practice answering these aloud or in writing—great for interview prep!
 Share what you learned today on social media! Post your key takeaways, lab experiences, or reflections using #LinuxFinalBoss or #DailyDevOpsChallenge. Tag @Sagar.Utekar to connect with the community and inspire others on their Linux journey.
 
 ## Next Steps
-Proceed to [Day 2: Virtualization & Setting Up Linux](https://www.google.com/search?q=../Day_02/notes_and_exercises.md) to learn how to set up your own Linux environment.
+Proceed to [Day 2: Virtualization & Setting Up Linux](../Day_02/notes_and_exercises.md) to learn how to set up your own Linux environment.
