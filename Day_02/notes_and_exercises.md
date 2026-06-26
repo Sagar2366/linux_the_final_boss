@@ -419,7 +419,7 @@ Step-by-step playtime—build confidence one tweak at a time.
 
 ### Part 1: VM Creation & First Boot
 1. Follow Steps 1-3 above—get Ubuntu 25.04 installed & logged in as linuxthefinalboss.
-2. **Exercise:** Run `neofetch` (install if needed: `sudo apt install neofetch`)—screenshot your system info.
+2. **Exercise:** Run `fastfetch` (install if needed: `sudo apt install fastfetch`)—screenshot your system info.
 3. **Question:** What kernel version shows? (Compare to Day 1's `uname -r`.)
 
 ### Part 2: Network Check & Fix
